@@ -62,7 +62,12 @@ char *TKGetNextToken( TokenizerT * tk ) {
 /*used to print out tokens in left-right order*/
 void printTokens(){
 
+	while(/*list is not empty*/){
 
+		
+		/*increment list*/
+		/*test comment*/
+	}
 }
 
 /*

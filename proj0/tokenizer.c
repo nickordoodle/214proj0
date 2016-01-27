@@ -3,6 +3,10 @@
  */
 #include <stdio.h>
 
+/*make true or false values*/
+typedef int bool;
+#define true 1
+#define false 0
 /*
  * Tokenizer type.  You need to fill in the type as part of your implementation.
  */
@@ -66,6 +70,7 @@ void printTokens(){
 
 		
 		/*increment list*/
+		/*test comment*/
 	}
 }
 
