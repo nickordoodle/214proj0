@@ -62,10 +62,15 @@ char *TKGetNextToken( TokenizerT * tk ) {
 /*used to print out tokens in left-right order*/
 void printTokens(){
 
+	while(/*list is not empty*/){
 
+		
+		/*increment list*/
+	}
 }
 
 /*
+
  * main will have a string argument (in argv[1]).
  * The string argument contains the tokens.
  * Print out the tokens in the second string in left-to-right order.
