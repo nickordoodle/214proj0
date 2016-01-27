@@ -58,6 +58,13 @@ char *TKGetNextToken( TokenizerT * tk ) {
   return NULL;
 }
 
+
+/*used to print out tokens in left-right order*/
+void printTokens(){
+
+
+}
+
 /*
  * main will have a string argument (in argv[1]).
  * The string argument contains the tokens.
@@ -67,5 +74,11 @@ char *TKGetNextToken( TokenizerT * tk ) {
 
 int main(int argc, char **argv) {
 
-  return 0;
+
+	/*NO ARGUMENTS, EXIT PROGRAM*/
+	if(argc == 0){
+		return 0;
+	}	
+	
+ 	return 0;
 }	
