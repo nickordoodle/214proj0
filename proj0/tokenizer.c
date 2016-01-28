@@ -90,6 +90,8 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	/*Build current token based on inputString and iterate
 	  until delimiter found, new type, or end of array*/
 
+	/*CHECK IF OPERATOR FIRST*/
+
 	while (isDelimiter == 0 || tk->inputString != '\0'){
 
 
