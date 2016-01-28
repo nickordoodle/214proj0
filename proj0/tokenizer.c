@@ -25,6 +25,16 @@ struct TokenizerT_ {
 
 typedef struct TokenizerT_ TokenizerT;
 
+struct Token_ {
+
+	char *string;
+	
+	
+};
+
+typedef struct Token_ Token;
+
+
 /*
  * TKCreate creates a new TokenizerT object for a given token stream
  * (given as a string).
@@ -71,13 +81,16 @@ void TKDestroy( TokenizerT * tk ) {
  * If the function succeeds, it returns a C string (delimited by '\0')
  * containing the token.  Else it returns 0.
  *
- * You need to fill in this function as part of your implementation.
+ * Algorithm: If first token is character/letter, then we have a word always. 
+ * Word, Hex, Octal, Dec, Float
  */
 
 char *TKGetNextToken( TokenizerT * tk ) {
 
-	/*iterates until delimiter found or new type*/
-	while (isDelimiter == falseValue || tk->inputString != '\0'){
+	/*Build current token based on inputString and iterate
+	  until delimiter found, new type, or end of array*/
+
+	while (isDelimiter == 0 || tk->inputString != '\0'){
 
 
 		
