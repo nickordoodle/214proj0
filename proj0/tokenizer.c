@@ -2,16 +2,25 @@
  * tokenizer.c
  */
 #include <stdio.h>
+#include <stdlib.h>
+#include "helperFunc.h" 
+#include "helperFunc.c"
 
-/*make true or false values*/
-typedef int bool;
-#define true 1
-#define false 0
+
 /*
  * Tokenizer type.  You need to fill in the type as part of your implementation.
+ * Input String will contain the whole input. CurrentIndex is what position the program
+ * is in while iterating through the string.  delimPositions will be an array of indexes
+ * that refer to the indices where a delimiter exists in the inputString.
  */
 
+
 struct TokenizerT_ {
+
+	char *inputString;
+	int *currIndex;
+	char *delimPositions;
+	
 };
 
 typedef struct TokenizerT_ TokenizerT;
@@ -32,6 +41,8 @@ typedef struct TokenizerT_ TokenizerT;
 
 TokenizerT *TKCreate( char * ts ) {
 
+	
+
   return NULL;
 }
 
@@ -39,10 +50,16 @@ TokenizerT *TKCreate( char * ts ) {
  * TKDestroy destroys a TokenizerT object.  It should free all dynamically
  * allocated memory that is part of the object being destroyed.
  *
- * You need to fill in this function as part of your implementation.
+ * First, free all allocated properties/elements of the TokenizerT struct. 
+ * Then free the pointer to the struct itself
  */
 
 void TKDestroy( TokenizerT * tk ) {
+
+	free(tk->inputString);
+	free(tk->currIndex);
+	free(tk->delimPositions);
+	free(tk);
 }
 
 /*
@@ -59,19 +76,29 @@ void TKDestroy( TokenizerT * tk ) {
 
 char *TKGetNextToken( TokenizerT * tk ) {
 
-  return NULL;
+	/*iterates until delimiter found or new type*/
+	while (isDelimiter == falseValue || tk->inputString != '\0'){
+
+
+		
+	}
+	/*add '\0' to end of array*/
+	return 0;
 }
 
 
 /*used to print out tokens in left-right order*/
 void printTokens(){
-
-	while(/*list is not empty*/){
+	
+	/*list is not empty is the condition*/
+	while(TKGetNextToken){
 
 		
 		/*increment list*/
-		/*test comment*/
+
 	}
+
+	/*free each token from tkgetnexttoken after it is used*/
 }
 
 /*
@@ -82,6 +109,26 @@ void printTokens(){
  * Each token should be printed on a separate line.
  */
 
+
+/*
+ Token Examples: 1234ab is 2 tokens
+			  12340b  is 2 tokens
+
+		       12340x is 2 tokens (BE GREEDY IN CURRENT TOKEN)
+			  dddddN  --> decimals and numbers
+
+			0 8 can be bad token or two numbers
+			
+			01234 is definitely octal
+
+			0x213 is hex
+
+			0129820x123 is best interpreted as decimal and a word
+
+
+	JUST SHOW EVERYTHING WITH DOCUMENTATION AND MAKE ASSUMPTIONS/RULES
+	BASED ON SMALL AMBIGUITIES.  "ROOM FOR INTERPRETATION"
+*/
 int main(int argc, char **argv) {
 
 
@@ -90,5 +137,7 @@ int main(int argc, char **argv) {
 		return 0;
 	}	
 	
+	
+
  	return 0;
 }	

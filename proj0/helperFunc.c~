@@ -1,0 +1,28 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "helperFunc.h"
+
+
+boolean isWord(char *input){
+
+}
+
+boolean isDecimal(char *input){
+
+}
+
+boolean isOctal(char *input){
+
+}
+
+boolean isHex(char *wordToCheck){
+
+}
+
+boolean isFloat(char *wordToCheck){
+
+}
+
+boolean isDelimiter(char *input){
+
+}

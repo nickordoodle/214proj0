@@ -6,17 +6,20 @@ A hexadecimal integer is “0x” (or “0X”) followed by any number of hexade
 A-F).
 A floating point*/
 
+typdef enum boolean_ {TRUE, FALSE} boolean;
 
-int isWord(char *input);
 
-int isDecimal(char *input);
 
-int isOctal(char *input);
+boolean isWord(char *input);
 
-int isHex(char *wordToCheck);
+boolean isDecimal(char *input);
 
-int isFloat(char *wordToCheck);
+boolean isOctal(char *input);
 
-int isDelimiter(char *input);
+boolean isHex(char *wordToCheck);
+
+boolean isFloat(char *wordToCheck);
+
+boolean isDelimiter(char *input);
 
 
