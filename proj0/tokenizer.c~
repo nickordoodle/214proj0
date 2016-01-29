@@ -3,8 +3,8 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
-#include "helperFunc.h" 
-#include "helperFunc.c"
+#include <ctype.h>
+
 
 
 /*
@@ -19,6 +19,8 @@ struct TokenizerT_ {
 
 	char *inputString;
 	int *currIndex;
+	int *nextIndex;
+	int *inputSize;
 	char *delimPositions;
 	
 };
@@ -34,7 +36,19 @@ struct Token_ {
 
 typedef struct Token_ Token;
 
+/*Called when TKGetNextToken determines that a word has started.  Purpose of this
+is to build the word until a new type of token is found, then we can return the
+function */
 
+char *createWordToken(TokenizerT *tk){
+	
+	int curr = tk->inputString[currIndex];
+
+	while(isalpha(curr) || isdigit(curr)){
+		
+
+	}
+}
 /*
  * TKCreate creates a new TokenizerT object for a given token stream
  * (given as a string).
@@ -68,6 +82,7 @@ void TKDestroy( TokenizerT * tk ) {
 
 	free(tk->inputString);
 	free(tk->currIndex);
+	free(tk->inputSize);
 	free(tk->delimPositions);
 	free(tk);
 }
@@ -88,13 +103,38 @@ void TKDestroy( TokenizerT * tk ) {
 char *TKGetNextToken( TokenizerT * tk ) {
 
 	/*Build current token based on inputString and iterate
-	  until delimiter found, new type, or end of array*/
+	  until delimiter found, new type, or end of array.
+	  The BuildFunctions will take the tokenizer parameter and the newToken
+	  string as arguments and finish iterating through until no more of their type is
+       found.  Each new character that is still of the same type is added
+       to the newToken String.*/
 
-	/*CHECK IF OPERATOR FIRST*/
+	/*Allocate memory for new token*/
+	char *newToken = malloc(sizeof(tk->inputString));
+	newToken = 0;
+	
+	char *curr = tk->currIndex;
 
-	while (isDelimiter == 0 || tk->inputString != '\0'){
+	while (isDelimiter == 0 &&
+		  newToken == 0 &&
+		  *curr != '\0'){
 
+		if(isalpha(*curr)){
+			//BuildWord();
+		} else if(*curr == 0) {
+			if(*nextIndex == 'x' || *nextIndex == 'X'){
+				//BuildHex();
+			} else { 
+				//BuildOctal();
+			}
 
+		} else if(isdigit(*curr)){
+			//BuildDecimal();
+		} else if(*curr == '.'){
+			//BuildFloat();
+		} else if(isOperator(*curr)){
+			newToken = *curr;
+		}
 		
 	}
 	/*add '\0' to end of array*/
