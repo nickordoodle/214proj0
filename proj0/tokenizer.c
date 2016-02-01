@@ -18,11 +18,11 @@
 struct TokenizerT_ {
 
 	char *inputString;
+	char *delimPositions;
 	int *currIndex;
 	int *nextIndex;
 	int *inputSize;
-	char *delimPositions;
-	
+
 };
 
 typedef struct TokenizerT_ TokenizerT;
@@ -65,9 +65,26 @@ char *createWordToken(TokenizerT *tk){
 
 TokenizerT *TKCreate( char * ts ) {
 
-	
+	/* Make copies of tokenizer and its properties, initialize all to 0 */
+	char *inputStringCopy = 0;
+	char *delimPositionsCopy = 0;
+	int *currIndexCopy = 0;
+	int *nextIndexCopy = 0;
+	int *inputSizeCopy = 0;
+	TokenizerT *tokenizer = 0;
 
-  return NULL;
+	/* Allocate memory for the tokenizer and its fields */
+	inputStringCopy = (char *)malloc(sizeof(ts->inputString));
+	delimPositionsCopy = (char *)malloc(sizeof(ts->delimPositions));
+	currIndexCopy = (int *)malloc(sizeof(ts->currIndexCopy));
+	nextIndexCopy = (int *)malloc(sizeof(ts->nextIndexCopy));
+	inputSizeCopy = (int *)malloc(sizeof(ts->inputSize));
+	tokenizer = malloc(sizeof(ts));
+
+	/* do NULL checks here */
+
+
+	return tokenizer;
 }
 
 /*
@@ -109,7 +126,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
        found.  Each new character that is still of the same type is added
        to the newToken String.*/
 
-	/*Allocate memory for new token*/
+	/*Allocate memory for new token, will reallocate later*/
 	char *newToken = malloc(sizeof(tk->inputString));
 	newToken = 0;
 	
@@ -186,11 +203,16 @@ void printTokens(){
 */
 int main(int argc, char **argv) {
 
+	TokenizerT *tokenizer = 0;
 
 	/*NO ARGUMENTS, EXIT PROGRAM*/
 	if(argc == 0){
 		return 0;
 	}	
+
+	TokenizerT = TKCreate(argv[1]);
+
+	
 	
 	
 
