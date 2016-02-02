@@ -1,5 +1,8 @@
 /*
  * tokenizer.c
+ *
+ * Nicholas Scherer, nds63
+ * Griffin Wood, 
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,27 +17,32 @@
  * that refer to the indices where a delimiter exists in the inputString.
  */
 
+typedef enum {WORD, DEC, HEX, FLOAT, OCTAL} token_type;
+
+
+/* Token struct to keep program more modular, keep together its token string
+   and its type.  Uses linked list format to keep track of other tokens*/
+struct Token_ {
+
+	char *string;
+	token_type tokenType;
+	Token *nextToken;
+	Token *prevToken;
+	
+	
+}; typedef struct Token_ Token;
+
 
 struct TokenizerT_ {
 
+	Token headToken;
 	char *inputString;
-	char *delimPositions;
 	int *currIndex;
 	int *nextIndex;
 	int *inputSize;
 
-};
+}; typedef struct TokenizerT_ TokenizerT;
 
-typedef struct TokenizerT_ TokenizerT;
-
-struct Token_ {
-
-	char *string;
-	
-	
-};
-
-typedef struct Token_ Token;
 
 /*Called when TKGetNextToken determines that a word has started.  Purpose of this
 is to build the word until a new type of token is found, then we can return the
@@ -67,22 +75,35 @@ TokenizerT *TKCreate( char * ts ) {
 
 	/* Make copies of tokenizer and its properties, initialize all to 0 */
 	char *inputStringCopy = 0;
-	char *delimPositionsCopy = 0;
 	int *currIndexCopy = 0;
-	int *nextIndexCopy = 0;
 	int *inputSizeCopy = 0;
 	TokenizerT *tokenizer = 0;
 
 	/* Allocate memory for the tokenizer and its fields */
 	inputStringCopy = (char *)malloc(sizeof(ts->inputString));
-	delimPositionsCopy = (char *)malloc(sizeof(ts->delimPositions));
 	currIndexCopy = (int *)malloc(sizeof(ts->currIndexCopy));
-	nextIndexCopy = (int *)malloc(sizeof(ts->nextIndexCopy));
 	inputSizeCopy = (int *)malloc(sizeof(ts->inputSize));
 	tokenizer = malloc(sizeof(ts));
 
-	/* do NULL checks here */
+	/* check NULL or empty string and free local variables and return NULL 
+		if true, otherwise copy string */
+	if( ts == NULL || *(ts[0]) == '\0'){
+		free(inputStringCopy);
+		free(currIndexCopy);
+		free(inputSizeCopy);
+		free(tokenizer);
+		return NULL;
+	} else {
+		inputSizeCopy = strlen(ts);
+		strncpy(inputStringCopy, ts, inputSizeCopy);	
+	}
 
+	/* Set new tokenizer field values */
+	tokenizer->inputString = inputStringCopy;
+	tokenizer->currIndex = currIndexCopy;
+	tokenizer->nextIndex = currIndexCopy + 1;
+	tokenizer->inputSize = inputSizeCopy;
+	
 
 	return tokenizer;
 }
