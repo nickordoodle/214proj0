@@ -161,9 +161,19 @@ char *TKGetNextToken( TokenizerT * tk ) {
        found.  Each new character that is still of the same type is added
        to the newToken String.*/
 
+	/*Reached end of array and/or last index*/
+	if(tk->*(inputString[currIndex]) == '\0' 	
+					||
+	   tk->currIndex == strlen(tk->inputString) - 1){
+		return 0;
+	
+	}
+
 	/*Allocate memory for new token, will reallocate later*/
 	char *newToken = malloc(sizeof(tk->inputString));
 	newToken = 0;
+
+	
 	
 	char *curr = tk->currIndex;
 
@@ -247,7 +257,7 @@ int main(int argc, char **argv) {
 
 	TokenizerT = TKCreate(argv[1]);
 
-	
+	while(
 	
 	
 
