@@ -21,7 +21,8 @@ typedef enum {WORD, DEC, HEX, FLOAT, OCTAL} token_type;
 
 
 /* Token struct to keep program more modular, keep together its token string
-   and its type.  Uses linked list format to keep track of other tokens*/
+   and its type of token.  Uses linked list format to keep track of 
+   other tokens */
 struct Token_ {
 
 	char *string;
@@ -35,7 +36,7 @@ struct Token_ {
 
 struct TokenizerT_ {
 
-	Token headToken;
+	Token *head;
 	char *inputString;
 	int *currIndex;
 	int *nextIndex;
@@ -74,12 +75,14 @@ char *createWordToken(TokenizerT *tk){
 TokenizerT *TKCreate( char * ts ) {
 
 	/* Make copies of tokenizer and its properties, initialize all to 0 */
+	Token *headCopy = 0;
 	char *inputStringCopy = 0;
 	int *currIndexCopy = 0;
 	int *inputSizeCopy = 0;
 	TokenizerT *tokenizer = 0;
 
 	/* Allocate memory for the tokenizer and its fields */
+	headCopy = malloc(sizeof(ts->head));
 	inputStringCopy = (char *)malloc(sizeof(ts->inputString));
 	currIndexCopy = (int *)malloc(sizeof(ts->currIndexCopy));
 	inputSizeCopy = (int *)malloc(sizeof(ts->inputSize));
@@ -88,6 +91,7 @@ TokenizerT *TKCreate( char * ts ) {
 	/* check NULL or empty string and free local variables and return NULL 
 		if true, otherwise copy string */
 	if( ts == NULL || *(ts[0]) == '\0'){
+		free(headCopy);
 		free(inputStringCopy);
 		free(currIndexCopy);
 		free(inputSizeCopy);
@@ -104,7 +108,7 @@ TokenizerT *TKCreate( char * ts ) {
 	tokenizer->nextIndex = currIndexCopy + 1;
 	tokenizer->inputSize = inputSizeCopy;
 	
-
+	/* If successful, give a tokenizer with initialized fields */
 	return tokenizer;
 }
 
@@ -118,10 +122,19 @@ TokenizerT *TKCreate( char * ts ) {
 
 void TKDestroy( TokenizerT * tk ) {
 
+	if(tk->head != NULL){	
+
+		Token *temp = tk->head;
+
+		while((temp = tk->head) != NULL){
+			tk->head = tk->head->nextToken;
+			free(temp);
+		}
+	}
 	free(tk->inputString);
 	free(tk->currIndex);
+	free(tk->nextIndex);	
 	free(tk->inputSize);
-	free(tk->delimPositions);
 	free(tk);
 }
 
