@@ -17,7 +17,7 @@
  * that refer to the indices where a delimiter exists in the inputString.
  */
 
-typedef enum {WORD, DEC, HEX, FLOAT, OCTAL} token_type;
+typedef enum {	WORD, DEC, HEX, FLOAT, OCTAL} token_type;
 
 
 /* Token struct to keep program more modular, keep together its token string
@@ -160,6 +160,8 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	  string as arguments and finish iterating through until no more of their type is
        found.  Each new character that is still of the same type is added
        to the newToken String.*/
+	
+	char *curr = tk->inputString[currIndex];
 
 	/*Reached end of array and/or last index*/
 	if(tk->*(inputString[currIndex]) == '\0' 	
@@ -169,17 +171,20 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	
 	}
 
+	/*Check if current index is at a delimiter, if so, move on to next token*/
+	if(isDelimiter(*curr)){
+		currIndex++;
+		TKGetNextToken(tk);
+
+	}
+
 	/*Allocate memory for new token, will reallocate later*/
 	char *newToken = malloc(sizeof(tk->inputString));
 	newToken = 0;
 
 	
-	
-	char *curr = tk->currIndex;
-
-	while (isDelimiter == 0 &&
-		  newToken == 0 &&
-		  *curr != '\0'){
+	//NOTE: might not need loop here
+	//while (newToken){
 
 		if(isalpha(*curr)){
 			//BuildWord();
@@ -198,21 +203,41 @@ char *TKGetNextToken( TokenizerT * tk ) {
 			newToken = *curr;
 		}
 		
-	}
+	//}
 	/*add '\0' to end of array*/
 	return 0;
 }
 
+/* Gives String value of enum tokentype */
+const char* getTokenType(token_type tokenType) {
+
+   switch (tokenType) {
+      case WORD: return "word";
+      case DEC: return "decimal";
+      case HEX: return "hexidecimal";
+      case FLOAT: return "float";
+      case OCTAL: return "octal";
+ 
+   }
+}
 
 /*used to print out tokens in left-right order*/
-void printTokens(){
+void printTokens(TokenizerT *tk){
 	
-	/*list is not empty is the condition*/
-	while(TKGetNextToken){
+	Token *curr = tk->head;
 
-		
-		/*increment list*/
+	/* List is not empty is the condition*/
+	while(curr != NULL){
 
+		/* Print current token and its type*/
+		printf("%s", getTokenType(curr->tokenType));
+		printf("%s", curr->string);
+
+		/* Go to next token in linked list */
+		curr = curr->nextToken;
+
+		/* Start new line */
+		printf("\n");
 	}
 
 	/*free each token from tkgetnexttoken after it is used*/
@@ -257,9 +282,7 @@ int main(int argc, char **argv) {
 
 	TokenizerT = TKCreate(argv[1]);
 
-	while(
-	
-	
+	/* Cycle through getNextTokens here */
 
- 	return 0;
+	printTokens(tokenizer);
 }	
