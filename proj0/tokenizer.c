@@ -103,6 +103,7 @@ TokenizerT *TKCreate( char * ts ) {
 	}
 
 	/* Set new tokenizer field values */
+	tokenizer->head = headCopy;
 	tokenizer->inputString = inputStringCopy;
 	tokenizer->currIndex = currIndexCopy;
 	tokenizer->nextIndex = currIndexCopy + 1;
