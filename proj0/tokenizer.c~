@@ -282,5 +282,7 @@ int main(int argc, char **argv) {
 
 	TokenizerT = TKCreate(argv[1]);
 
+	/* Cycle through getNextTokens here */
+
 	printTokens(tokenizer);
 }	
