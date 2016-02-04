@@ -366,8 +366,7 @@ int main(int argc, char **argv) {
 		Token *newToken = malloc(sizeof(Token));
 		newToken->string = newTokenString;
 		
-		printf("%s", new
-		Token);
+		printf("%s", Token);
 	}
 	
 	TKDestroy(tokenizer);
