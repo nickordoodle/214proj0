@@ -14,13 +14,13 @@
 
 /* To be used as a way to keep strings and their types together and for easier
    iteration while printing */
- struct Token_ {
+ typedef struct {
 
 	char *string;
 	char *tokenType;
 	Token *nextToken;
 	
-}; typedef struct Token_ Token;
+} Token;
 
 /*
  * Tokenizer type.  You need to fill in the type as part of your implementation.
@@ -109,8 +109,6 @@ void TKDestroy( TokenizerT * tk ) {
 	}
 	
 	free(tk->inputString);
-	free(tk->currIndex);
-	free(tk->inputSize);
 	free(tk);
 }
 
@@ -180,7 +178,7 @@ int hasNextToken(TokenizerT *tk){
 	
 	char *inputString = tk->inputString;
 	int nextIndex = tk->currIndex + 1;
-	if(!tk || strcmp(inputString[nextIndex], '\0') ){
+	if(!tk || strcmp(inputString[nextIndex]), '\0') ){
 		return 0;
 	} 
 	
@@ -290,8 +288,9 @@ void addTokenToList(Token *token, TokenizerT *tk){
 			temp = temp->nextToken;
 		}
 		
-		temp->nextToken = token;
-		temp->nextToken->nextToken = NULL;
+		token = temp->nextToken;
+		token->nextToken = NULL;
+
 	}
 	
 	
@@ -337,7 +336,7 @@ int isDec(char *string){
 }
 /* To be implemented with all single character operators, since we use greedy algorithms,
     we will only consider single char operators and start the sequence over */
-int isOp (char c){
+int isOp (char *c){
 	
 	//char *operatorsArray[25] = { '(', ')', '[', ']', '*', '&', '-', '!' };
 	return 0;
@@ -350,9 +349,9 @@ void createTokensFromString(char *tokenString, TokenizerT *tk){
 	
 	/* Use int indexes to keep track of where we are in the string */
 	
-	int startIndex = 0;
+	//int startIndex = 0;
 	int currIndex = tk->currIndex;
-	char firstChar = tokenString[startIndex];
+	char *firstChar = tokenString;
 	
 	/* Check string until end to account for multiple tokens */
 	while (tokenString[currIndex] != '\0'){
@@ -365,7 +364,7 @@ void createTokensFromString(char *tokenString, TokenizerT *tk){
 		/* Equivalent of checking if first char is equal to zero */
 		else if(!firstChar) {
 			/*Compares if nextToken is x which would indicate a hex token */
-			if(!strcmp(tolower(firstChar + 1), 'x')){
+			if( (firstChar + 1) == 'x' || (firstChar + 1) == 'X'){
 				//BuildHex();
 			} else { 
 				//BuildOctal();
@@ -373,7 +372,7 @@ void createTokensFromString(char *tokenString, TokenizerT *tk){
 
 		} else if(isdigit(firstChar)){
 			//BuildDecimal();
-		} else if(!strcmp(firstChar, '.')){
+		} else if(!strcmp(firstChar, (char *) '.')){
 			//BuildFloat();
 		} else if(isOp(firstChar) ){
 		
