@@ -14,13 +14,14 @@
 
 /* To be used as a way to keep strings and their types together and for easier
    iteration while printing */
- typedef struct {
+ typedef struct Token Token;
+ struct Token{
 
 	char *string;
 	char *tokenType;
 	Token *nextToken;
 	
-} Token;
+};
 
 /*
  * Tokenizer type.  You need to fill in the type as part of your implementation.
