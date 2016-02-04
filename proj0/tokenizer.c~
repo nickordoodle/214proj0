@@ -2,8 +2,9 @@
  * tokenizer.c
  *
  * Nicholas Scherer, nds63
- * Griffin Wood, 
+ * Griffin Wood,  gbw15
  */
+ 
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -17,14 +18,11 @@
  * that refer to the indices where a delimiter exists in the inputString.
  */
 
-typedef enum {	WORD, DEC, HEX, FLOAT, OCTAL} token_type;
-
-
 /* Token struct to keep program more modular, keep together its token string
    and its type of token.  Uses linked list format to keep track of 
    other tokens */
-struct Token_ {
 
+struct Token_ {
 	char *string;
 	token_type tokenType;
 	Token *nextToken;
@@ -33,31 +31,16 @@ struct Token_ {
 	
 }; typedef struct Token_ Token;
 
-
 struct TokenizerT_ {
 
 	Token *head;
 	char *inputString;
-	int *currIndex;
-	int *nextIndex;
-	int *inputSize;
+	char *tokenTypesArray[];
+	int currIndex;
+	int inputSize;
 
 }; typedef struct TokenizerT_ TokenizerT;
 
-
-/*Called when TKGetNextToken determines that a word has started.  Purpose of this
-is to build the word until a new type of token is found, then we can return the
-function */
-
-char *createWordToken(TokenizerT *tk){
-	
-	int curr = tk->inputString[currIndex];
-
-	while(isalpha(curr) || isdigit(curr)){
-		
-
-	}
-}
 /*
  * TKCreate creates a new TokenizerT object for a given token stream
  * (given as a string).
@@ -74,40 +57,32 @@ char *createWordToken(TokenizerT *tk){
 
 TokenizerT *TKCreate( char * ts ) {
 
+	if( ts == NULL || *(ts[0]) == '\0'){
+		return 0;
+	}
+	
 	/* Make copies of tokenizer and its properties, initialize all to 0 */
-	Token *headCopy = 0;
-	char *inputStringCopy = 0;
-	int *currIndexCopy = 0;
-	int *inputSizeCopy = 0;
+	Token *head = 0;
+	char *inputString = 0;
+	int currIndex = 0;
+	int inputSize = 0;
 	TokenizerT *tokenizer = 0;
 
 	/* Allocate memory for the tokenizer and its fields */
-	headCopy = malloc(sizeof(ts->head));
-	inputStringCopy = (char *)malloc(sizeof(ts->inputString));
-	currIndexCopy = (int *)malloc(sizeof(ts->currIndexCopy));
-	inputSizeCopy = (int *)malloc(sizeof(ts->inputSize));
-	tokenizer = malloc(sizeof(ts));
+	head = malloc(sizeof(Token));
+	inputString = (char *)malloc(sizeof(ts));
+	tokenizer = malloc(sizeof(TokenizerT));
 
-	/* check NULL or empty string and free local variables and return NULL 
-		if true, otherwise copy string */
-	if( ts == NULL || *(ts[0]) == '\0'){
-		free(headCopy);
-		free(inputStringCopy);
-		free(currIndexCopy);
-		free(inputSizeCopy);
-		free(tokenizer);
-		return NULL;
-	} else {
-		inputSizeCopy = strlen(ts);
-		strncpy(inputStringCopy, ts, inputSizeCopy);	
-	}
+	/*  Copy the string paramter to inputString variable and get inputSize */
+	strcpy(inputString, ts);	
+	inputSize = strlen(inputString);
+	
 
 	/* Set new tokenizer field values */
-	tokenizer->head = headCopy;
-	tokenizer->inputString = inputStringCopy;
-	tokenizer->currIndex = currIndexCopy;
-	tokenizer->nextIndex = currIndexCopy + 1;
-	tokenizer->inputSize = inputSizeCopy;
+	tokenizer->head = head;
+	tokenizer->inputString = inputString;
+	tokenizer->currIndex = currIndex;
+	tokenizer->inputSize = inputSize;
 	
 	/* If successful, give a tokenizer with initialized fields */
 	return tokenizer;
@@ -132,13 +107,66 @@ void TKDestroy( TokenizerT * tk ) {
 			free(temp);
 		}
 	}
+	
 	free(tk->inputString);
 	free(tk->currIndex);
-	free(tk->nextIndex);	
 	free(tk->inputSize);
 	free(tk);
 }
 
+int isDelimiter (char c){
+	switch (c){
+		case ' ':
+			return 1;
+			break;
+		case '\t':
+			return 1;
+			break;
+		case '\v':
+			return 1;
+			break;
+		case '\f':
+			return 1;
+			break;
+		case '\n':
+			return 1;
+			break;
+		case '\r':
+			return 1;
+			break;
+		default:
+			return 0;
+			break;
+	}
+}
+
+/* ( ) [ ]  ->
+function array element structure member structure pointer
+UNARY OPERATORS ---------------------------------------- RIGHT TO LEFT
+* & - ! ~ ++ -- sizeof ( )
+indirect address minus negate 1’s comp inc dec cast
+BINARY OPERATORS --------- decreasing precedence ---------- LEFT TO RIGHT
+* multiply / divide % modulus
++ add - subtract
+>> shift right << shift left
+< less than > greater than <= less or equal >= greater or equal
+== equals != not equals
+& bitwise and
+^ bitwise exclusive or
+| bitwise or
+&& logical and || logical or
+CONDITIONAL EXPRESSION ---------------------------------------- RIGHT TO LEFT
+Condition ? true : false
+ASSIGNMENT OPERATORS ---------------------------------------- RIGHT TO LEFT
+- += -= *= /= %= >>= <<= &= ^= |= see BINARY OPERATORS
+COMMA OPERATOR ---------------------------------------- LEFT TO RIGHT
+, discards value of left expression */
+
+int isOperator (char c){
+	
+	char *operatorsArray[25] = { '(', ')', '[', ']', '*', '&', '-', '!' }
+	
+}
 /*
  * TKGetNextToken returns the next token from the token stream as a
  * character string.  Space for the returned token should be dynamically
@@ -152,6 +180,22 @@ void TKDestroy( TokenizerT * tk ) {
  * Word, Hex, Octal, Dec, Float
  */
 
+int hasNextToken(TokenizerT *tk){
+	
+	char *inputString = tk->inputString;
+	int nextIndex = tk->currIndex + 1;
+	if(!tk || strcmp(inputString[nextIndex], '\0') ){
+		return 0;
+	} 
+	
+	return 1;
+
+}
+
+/* can be used to build specific tokens */
+char *addToString(char *string, char c){
+	
+}
 char *TKGetNextToken( TokenizerT * tk ) {
 
 	/*Build current token based on inputString and iterate
@@ -160,92 +204,128 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	  string as arguments and finish iterating through until no more of their type is
        found.  Each new character that is still of the same type is added
        to the newToken String.*/
+<<<<<<< HEAD
+		
+	char *inputString = tk->inputString;
 	
-	char *curr = tk->inputString[currIndex];
-
-	/*Reached end of array and/or last index*/
-	if(tk->*(inputString[currIndex]) == '\0' 	
-					||
-	   tk->currIndex == strlen(tk->inputString) - 1){
-		return 0;
-	
+	/* Increment tokenizer struct index and continue function.*/
+	while(isDelimiter( inputString[tk->currIndex]) ){
+		tk->currIndex++;
 	}
 
-	/*Check if current index is at a delimiter, if so, move on to next token*/
-	if(isDelimiter(*curr)){
-		currIndex++;
-		TKGetNextToken(tk);
-
-	}
-
-	/*Allocate memory for new token, will reallocate later*/
+	/* Allocate memory for new token, will reallocate later */
 	char *newToken = malloc(sizeof(tk->inputString));
 	newToken = 0;
-
 	
-	//NOTE: might not need loop here
-	//while (newToken){
-
-		if(isalpha(*curr)){
-			//BuildWord();
-		} else if(*curr == 0) {
-			if(*nextIndex == 'x' || *nextIndex == 'X'){
-				//BuildHex();
-			} else { 
-				//BuildOctal();
-			}
-
-		} else if(isdigit(*curr)){
-			//BuildDecimal();
-		} else if(*curr == '.'){
-			//BuildFloat();
-		} else if(isOperator(*curr)){
-			newToken = *curr;
+	char currChar = inputString[tk->currIndex];
+	
+	if(isalpha(currChar)){
+		//BuildWord( TokenizerT *tk );
+	} else if(currChar == 0) {
+		if(strcmpi(tk->(currIndex*nextIndex == 'x' || *nextIndex == 'X'){
+			//BuildHex( TokenizerT *tk);
+		} else { 
+			//BuildOctal( TokenizerT *tk);
 		}
+
+	} else if(isdigit(currChar)){
+		//BuildDecimal(TokenizerT *tk);
+	} else if(currChar == '.'){
+		//BuildFloat( TokenizerT *tk);
+	} else if(isOperator(currChar)){
+		newToken = currChar;
+	}
 		
-	//}
-	/*add '\0' to end of array*/
-	return 0;
-}
-
-/* Gives String value of enum tokentype */
-const char* getTokenType(token_type tokenType) {
-
-   switch (tokenType) {
-      case WORD: return "word";
-      case DEC: return "decimal";
-      case HEX: return "hexidecimal";
-      case FLOAT: return "float";
-      case OCTAL: return "octal";
- 
-   }
-}
-
-/*used to print out tokens in left-right order*/
-void printTokens(TokenizerT *tk){
+=======
 	
-	Token *curr = tk->head;
+	int currIndex = tk->tokenizer; //to be used to iterate through the string
+	int startIndex = currIndex; //to be used to store the beginning of each token when iterating through the string to find the end
+	
+	char *newToken = 0;
+	char *inputString = tk->inputString;
+	char currentChar = inputString[currIndex];
+	
+	/* Skip delimiters and increment tokenizer struct index and continue function.*/
+	while(isDelimiter( currentChar) ){
+		tk->currIndex++;
+	}
+	
+	/*interates through until reaching the end of array and/or last index*/
+   	startIndex = currIndex;
+   	
+	if(isalpha(currentChar)){//check for word
 
-	/* List is not empty is the condition*/
-	while(curr != NULL){
+		while(isalpha(currentChar) || isdigit(currentChar)){
+			currIndex++;
+		}
+		printf("word");//print substring at the end to avoid unnecessary repetition 
+	
+	} else if( isdigit(currentChar)){//check for hex, octal, and decimal
 
-		/* Print current token and its type*/
-		printf("%s", getTokenType(curr->tokenType));
-		printf("%s", curr->string);
-
-		/* Go to next token in linked list */
-		curr = curr->nextToken;
-
-		/* Start new line */
-		printf("\n");
+		if(!currentChar){ //check for hex or octal, the negation checks for 0 so this is equivalent to if(currentChar == 0)
+	
+			if( !strcmp(tolower(currentChar + 1), 'x')) { //check for hex by seeing if next character is 'x'
+				//probably need to deal with the case that nothing comes after the x. I think thats a bad token
+				while(){
+					if(currentChar=>0 || currentChar=<9){
+						currIndex++;
+						continue;
+					}else if(currentChar=>"A" || currentChar=<"F"){ //or should it be the other way round?
+						currIndex++;
+						continue;
+					}else if(currentChar=>"a" || currentChar=<"f"){
+						currIndex++;
+						continue;
+					}
+					break;
+				}
+				if(currIndex-startIndex == 2)
+					printf("bad token");
+				else
+					printf("hexadecimal");	
+		
+				//BuildHex();
+			}else { //build octal, must be octal if it wasnt hex, unless length 1
+				if(currentChar=>0 || currentChar=<7){
+					currIndex++;
+				}
+				if(currIndex==startIndex)
+					printf("decimal")
+				else
+					printf("octal")
+			}
+		}else{//build decimal, must be decimal 
+			while(isdigit(currentChar)){
+				currIndex++;	
+			}
+			printf("decimal")
+		}
+	} else if(currentChar == '.'){
+		//BuildFloat();
+		//testcomment
+	}
+	/* Do not need this because its put at beginning of function
+	else if(isDelimiter(currentChar)){
+		currIndex++;
+		TKGetNextToken(tk);
+		print(substring); //demishes repetition
+	} */ else if(isOperator(currentChar)){
+		newToken = currentChar;
 	}
 
-	/*free each token from tkgetnexttoken after it is used*/
+>>>>>>> 659fdb0eccf6da384692b9b84c532467056fda98
+	newToken = malloc(sizeof(char * (currIndex - startIndex + 1)))
+	strncpy( newToken, inputString[currIndex] + startIndex, (currIndex - startIndex))
+	newToken[strlen(newToken) + 1] = '\0';	
+	/*add '\0' to end of array*/
+	return newToken;
 }
+
 
 /*
 
- * main will have a string argument (in argv[1]).
+ * 
+ main will have a string argument (in argv[1]).
  * The string argument contains the tokens.
  * Print out the tokens in the second string in left-to-right order.
  * Each token should be printed on a separate line.
@@ -273,16 +353,23 @@ void printTokens(TokenizerT *tk){
 */
 int main(int argc, char **argv) {
 
-	TokenizerT *tokenizer = 0;
-
 	/*NO ARGUMENTS, EXIT PROGRAM*/
 	if(argc == 0){
 		return 0;
 	}	
 
-	TokenizerT = TKCreate(argv[1]);
+	TokenizerT *tokenizer = TKCreate(argv[1]);
 
-	/* Cycle through getNextTokens here */
+	/* Iterates loop until end of array */
+	while (hasNextToken(tokenizer)){
+		char * newTokenString = TKGetNextToken(tokenizer);
+		Token *newToken = malloc(sizeof(Token));
+		newToken->string = newTokenString;
+		
+		printf("%s", new
+		Token);
+	}
+	
+	TKDestroy(tokenizer);
 
-	printTokens(tokenizer);
 }	
