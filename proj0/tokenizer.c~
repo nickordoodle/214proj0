@@ -11,31 +11,31 @@
 
 
 
+/* To be used as a way to keep strings and their types together and for easier
+   iteration while printing */
+ struct Token_ {
+
+	char *string;
+	char *tokenType;
+	Token *nextToken;
+	
+}; typedef struct Token_ Token;
+
 /*
  * Tokenizer type.  You need to fill in the type as part of your implementation.
  * Input String will contain the whole input. CurrentIndex is what position the program
  * is in while iterating through the string.  delimPositions will be an array of indexes
  * that refer to the indices where a delimiter exists in the inputString.
+ *
+ *  This implementation uses a linked list of "Tokens" for readability, modularity, and ease of use 
+ *  The inputString is the standard program argument, currIndex is how far through we are
+ * through the string and inputSize is the length of the inputString.
  */
-
-/* Token struct to keep program more modular, keep together its token string
-   and its type of token.  Uses linked list format to keep track of 
-   other tokens */
-
-struct Token_ {
-	char *string;
-	token_type tokenType;
-	Token *nextToken;
-	Token *prevToken;
-	
-	
-}; typedef struct Token_ Token;
-
+ 
 struct TokenizerT_ {
-
+	
 	Token *head;
 	char *inputString;
-	char *tokenTypesArray[];
 	int currIndex;
 	int inputSize;
 
@@ -57,12 +57,12 @@ struct TokenizerT_ {
 
 TokenizerT *TKCreate( char * ts ) {
 
-	if( ts == NULL || *(ts[0]) == '\0'){
+	if( ts == NULL || ts[0] == '\0'){
 		return 0;
 	}
 	
 	/* Make copies of tokenizer and its properties, initialize all to 0 */
-	Token *head = 0;
+	Token *head = NULL;
 	char *inputString = 0;
 	int currIndex = 0;
 	int inputSize = 0;
@@ -97,11 +97,10 @@ TokenizerT *TKCreate( char * ts ) {
  */
 
 void TKDestroy( TokenizerT * tk ) {
-
+	
 	if(tk->head != NULL){	
-
 		Token *temp = tk->head;
-
+		
 		while((temp = tk->head) != NULL){
 			tk->head = tk->head->nextToken;
 			free(temp);
@@ -162,11 +161,7 @@ ASSIGNMENT OPERATORS ---------------------------------------- RIGHT TO LEFT
 COMMA OPERATOR ---------------------------------------- LEFT TO RIGHT
 , discards value of left expression */
 
-int isOperator (char c){
-	
-	char *operatorsArray[25] = { '(', ')', '[', ']', '*', '&', '-', '!' }
-	
-}
+
 /*
  * TKGetNextToken returns the next token from the token stream as a
  * character string.  Space for the returned token should be dynamically
@@ -192,10 +187,6 @@ int hasNextToken(TokenizerT *tk){
 
 }
 
-/* can be used to build specific tokens */
-char *addToString(char *string, char c){
-	
-}
 char *TKGetNextToken( TokenizerT * tk ) {
 
 	/*Build current token based on inputString and iterate
@@ -204,53 +195,17 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	  string as arguments and finish iterating through until no more of their type is
        found.  Each new character that is still of the same type is added
        to the newToken String.*/
-<<<<<<< HEAD
 		
 	char *inputString = tk->inputString;
 	
-	/* Increment tokenizer struct index and continue function.*/
+	/* Increment tokenizer struct index to skip delimiters start creating new token
+	    through main functions.*/
 	while(isDelimiter( inputString[tk->currIndex]) ){
 		tk->currIndex++;
 	}
-
-	/* Allocate memory for new token, will reallocate later */
-	char *newToken = malloc(sizeof(tk->inputString));
-	newToken = 0;
 	
-	char currChar = inputString[tk->currIndex];
 	
-	if(isalpha(currChar)){
-		//BuildWord( TokenizerT *tk );
-	} else if(currChar == 0) {
-		if(strcmpi(tk->(currIndex*nextIndex == 'x' || *nextIndex == 'X'){
-			//BuildHex( TokenizerT *tk);
-		} else { 
-			//BuildOctal( TokenizerT *tk);
-		}
-
-	} else if(isdigit(currChar)){
-		//BuildDecimal(TokenizerT *tk);
-	} else if(currChar == '.'){
-		//BuildFloat( TokenizerT *tk);
-	} else if(isOperator(currChar)){
-		newToken = currChar;
-	}
-		
-=======
-	
-	int currIndex = tk->tokenizer; //to be used to iterate through the string
-	int startIndex = currIndex; //to be used to store the beginning of each token when iterating through the string to find the end
-	
-	char *newToken = 0;
-	char *inputString = tk->inputString;
-	char currentChar = inputString[currIndex];
-	
-	/* Skip delimiters and increment tokenizer struct index and continue function.*/
-	while(isDelimiter( currentChar) ){
-		tk->currIndex++;
-	}
-	
-	/*interates through until reaching the end of array and/or last index*/
+	/*interates through until reaching the end of array and/or last index
    	startIndex = currIndex;
    	
 	if(isalpha(currentChar)){//check for word
@@ -309,19 +264,138 @@ char *TKGetNextToken( TokenizerT * tk ) {
 		currIndex++;
 		TKGetNextToken(tk);
 		print(substring); //demishes repetition
-	} */ else if(isOperator(currentChar)){
+	} *else if(isOperator(currentChar)){
 		newToken = currentChar;
 	}
 
->>>>>>> 659fdb0eccf6da384692b9b84c532467056fda98
 	newToken = malloc(sizeof(char * (currIndex - startIndex + 1)))
 	strncpy( newToken, inputString[currIndex] + startIndex, (currIndex - startIndex))
 	newToken[strlen(newToken) + 1] = '\0';	
-	/*add '\0' to end of array*/
+	add '\0' to end of array*/
+	return 0;
+	
+}
+
+/* Adds a new token to end of the linked list in tokenizerT struct */
+void addTokenToList(Token *token, TokenizerT *tk){
+
+	Token *temp = tk->head;
+	
+	if(temp == NULL){
+		temp = token;
+		temp->nextToken = NULL;
+	} else {
+		while( temp->nextToken != NULL){
+			temp = temp->nextToken;
+		}
+		
+		temp->nextToken = token;
+		temp->nextToken->nextToken = NULL;
+	}
+	
+	
+
+}
+
+Token *createWordToken(char *string, TokenizerT *tk){
+	
+	Token *newToken = NULL;
+	newToken = malloc(sizeof(Token));
+	int currIndex = 0;
+	char currChar = string[currIndex];
+	
+	while((isalpha(currChar) || isdigit(currChar)) && currIndex < tk->inputSize - 1){
+			currIndex++;
+	}
+	
+	newToken->string = malloc(currIndex * sizeof(char));
+	strncpy(newToken->string, string, currIndex);
+	newToken->tokenType = "word";
+	tk->currIndex = currIndex;
 	return newToken;
 }
 
+int isHex(char *string){
+	
+	return 0;
+}
 
+int isOct(char *string){
+	
+	return 0;
+}
+
+int isFloat(char *string){
+	
+	return 0;
+}
+
+int isDec(char *string){
+	
+	return 0;
+}
+/* To be implemented with all single character operators, since we use greedy algorithms,
+    we will only consider single char operators and start the sequence over */
+int isOp (char c){
+	
+	//char *operatorsArray[25] = { '(', ')', '[', ']', '*', '&', '-', '!' };
+	return 0;
+	
+}
+
+/* Takes in the current token string from main and determines its type, then returns the type.
+    Starts checks with first character and then goes from there */
+void createTokensFromString(char *tokenString, TokenizerT *tk){
+	
+	/* Use int indexes to keep track of where we are in the string */
+	
+	int startIndex = 0;
+	int currIndex = tk->currIndex;
+	char firstChar = tokenString[startIndex];
+	
+	/* Check string until end to account for multiple tokens */
+	while (tokenString[currIndex] != '\0'){
+	
+		if(isalpha(firstChar) ){
+			Token *token = createWordToken(tokenString, tk);
+			addTokenToList(token, tk);
+				
+		} 
+		/* Equivalent of checking if first char is equal to zero */
+		else if(!firstChar) {
+			/*Compares if nextToken is x which would indicate a hex token */
+			if(!strcmp(tolower(firstChar + 1), 'x')){
+				//BuildHex();
+			} else { 
+				//BuildOctal();
+			}
+
+		} else if(isdigit(firstChar)){
+			//BuildDecimal();
+		} else if(!strcmp(firstChar, '.')){
+			//BuildFloat();
+		} else if(isOp(firstChar) ){
+		
+			//Found operator, same behavior as regular token
+		} else {
+			//Bad Token
+		}
+	}
+	
+	/* Add '\0 to end of token */
+}
+
+void printTokenList(TokenizerT *tk){
+
+	Token *temp = tk->head;
+	
+	while(temp != NULL){
+		
+		/* PRINT EACH TOKENS TYPE AND THEN ITS STRING AND 
+		   START A NEW LINE AFTER */
+	
+	}
+}
 /*
 
  * 
@@ -362,13 +436,13 @@ int main(int argc, char **argv) {
 
 	/* Iterates loop until end of array */
 	while (hasNextToken(tokenizer)){
-		char * newTokenString = TKGetNextToken(tokenizer);
-		Token *newToken = malloc(sizeof(Token));
-		newToken->string = newTokenString;
-		
-		printf("%s", Token);
+		char *newTokenString = TKGetNextToken(tokenizer);
+		createTokensFromString(newTokenString, tokenizer);
+			
 	}
 	
+	printTokenList(tokenizer);
 	TKDestroy(tokenizer);
 
+	return 0;
 }	
