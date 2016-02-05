@@ -339,7 +339,7 @@ int isDec(char *string){
     we will only consider single char operators and start the sequence over */
 int isOp (char *c){
 	
-	//char *operatorsArray[25] = { '(', ')', '[', ']', '*', '&', '-', '!' };
+	char *operatorsArray[25] = { '(', ')', '[', ']', '*', '&', '-', '!' };
 	return 0;
 	
 }

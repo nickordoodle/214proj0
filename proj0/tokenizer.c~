@@ -21,7 +21,7 @@
 	char *tokenType;
 	Token *nextToken;
 	
-} Token_ Token;
+};
 
 /*
  * Tokenizer type.  You need to fill in the type as part of your implementation.
@@ -339,7 +339,7 @@ int isDec(char *string){
     we will only consider single char operators and start the sequence over */
 int isOp (char *c){
 	
-	//char *operatorsArray[25] = { '(', ')', '[', ']', '*', '&', '-', '!' };
+	char *operatorsArray[25] = { '(', ')', '[', ']', '*', '&', '-', '!' };
 	return 0;
 	
 }
