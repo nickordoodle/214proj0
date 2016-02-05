@@ -235,7 +235,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
 			currIndex++
 		}
 		print(substring); //demishes repetition, << NOT SURE WHAT YOU WANTED HERE
-	} else if(isOperator(currentChar)){
+	} else if(isOp(currentChar)){
 		
 	}
 
@@ -266,7 +266,7 @@ Token *createWordToken(char *string, TokenizerT *tk){
 	return newToken;
 }
 
-char *isHex(char *string){
+char *buildHex(char *string){
 	while(){
 		if(currentChar=>0 || currentChar=<9){
 			currIndex++;
@@ -287,17 +287,17 @@ char *isHex(char *string){
 	return 0;
 }
 
-int isOct(char *string){
+int buildOct(char *string){
 	
 	return 0;
 }
 
-int isFloat(char *string){
+int buildFloat(char *string){
 	
 	return 0;
 }
 
-int isDec(char *string){
+int buildDec(char *string){
 	
 	return 0;
 }
