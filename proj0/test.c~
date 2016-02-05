@@ -6,31 +6,30 @@
 struct TokenizerT_ {
 
 	char *inputString;
-	int currIndex;
+	int *currIndex;
 	int inputSize;
 
 }; typedef struct TokenizerT_ TokenizerT;
 
 int main(int argc, char **argv) {
 
-	char *operatorsArray[20] = {'(', ')', '[', ']', '*', '&', '-', '!'};
-		
+	//char *operatorsArray[20] = {'(', ')', '[', ']', '*', '&', '-', '!'};
+
+	
 	TokenizerT *tk = malloc(sizeof(TokenizerT));
+	tk->inputString = malloc(sizeof(char *));
+
+
+	int *currIndex = tk->currIndex;	
+	int number = 4;
 	tk->inputString = "abcdefg";
-	tk->currIndex = 4;
-	int startIndex = 1
-	char *newString = 0;
+	currIndex = &number;
 	
-	char *inputString = tk->inputString;
-	char *currentChar = inputString[tk->currIndex];
+	(*currIndex)++;
 	
-	printf("%c\n", currentChar);
 	
-	strncpy( newString, inputString[currIndex(currIndex - startIndex))	
-	printf("%s\n", newString);
-	
-	tk->currIndex = tk->currIndex + 1;
-	printf("%c\n", currentChar);
+	printf("%d\n", *currIndex);
+
 
 	return 0;
 
