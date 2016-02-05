@@ -10,7 +10,13 @@
 #include <string.h>
 #include <ctype.h>
 
-
+/*To Do:
+Need to make currentChar actually represent a char. You changed it from me accessing an index in the array each time. Also im iterating through so currentChar needs to be going one char over each time the local currIndex is going up one.
+Decided we have two options: to use the tokens need to add something in main to correctly deal look at the inside of the tokens 
+i think weve agreed to this one>	or currently I print out type inside getNextToken and then return the string which should be printed out in main.
+Need to deal with operators 
+Have not deleted of your functions, but I believe currently everything works without any of the helper functions. I wanted to leave them for you jsut in case you wanted to use any of them.
+*/
 
 /* To be used as a way to keep strings and their types together and for easier
    iteration while printing */
@@ -200,11 +206,11 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	
 	/* Increment tokenizer struct index to skip delimiters start creating new token
 	    through main functions.*/
-	while(isDelimiter( inputString[tk->currIndex]) ){
+	while(isDelimiter( inputString[tk->currIndex]) ){// i think its better to move this to the end cause its the less common occuance
 		tk->currIndex++;
 	}
 	
-	
+	//currentChar currently does nothing
 	/*interates through until reaching the end of array and/or last index
    	startIndex = currIndex;
    	
@@ -245,21 +251,22 @@ char *TKGetNextToken( TokenizerT * tk ) {
 					currIndex++;
 				}
 				if(currIndex==startIndex)
-					printf("decimal")
+					printf("decimal");
 				else
-					printf("octal")
+					printf("octal");
 			}
 		}else{//build decimal, must be decimal 
 			while(isdigit(currentChar)){
 				currIndex++;	
 			}
-			printf("decimal")
+			printf("decimal");
 		}
 	} else if(currentChar == '.'){
 		//BuildFloat();
 		//testcomment
 	}
-	/* Do not need this because its put at beginning of function
+	/* Do not need this because its put at beginning of function 
+		Reason for change: it is better to check here because this is the less common occurance.
 	else if(isDelimiter(currentChar)){
 		currIndex++;
 		TKGetNextToken(tk);
@@ -271,8 +278,10 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	newToken = malloc(sizeof(char * (currIndex - startIndex + 1)))
 	strncpy( newToken, inputString[currIndex] + startIndex, (currIndex - startIndex))
 	newToken[strlen(newToken) + 1] = '\0';	
+	currIndex++;
+	tk->currIndex = currindex;
 	add '\0' to end of array*/
-	return 0;
+	return newToken;
 	
 }
 
@@ -316,8 +325,24 @@ Token *createWordToken(char *string, TokenizerT *tk){
 	return newToken;
 }
 
-int isHex(char *string){
-	
+*char isHex(char *string){
+	while(){
+		if(currentChar=>0 || currentChar=<9){
+			currIndex++;
+			continue;
+		}else if(currentChar=>"A" || currentChar=<"F"){ //or should it be the other way round?
+			currIndex++;
+			continue;
+		}else if(currentChar=>"a" || currentChar=<"f"){
+			currIndex++;
+			continue;
+		}
+	break;
+	}
+	if(currIndex-startIndex == 2)
+		printf("bad token");
+	else
+		printf("hexadecimal");	
 	return 0;
 }
 
