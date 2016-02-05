@@ -188,7 +188,10 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	char *currentChar = inputString[tk->currIndex];
 	int currIndex = tk->currIndex;
 	
-	
+	/* For all conditions, we use the start index which is where 'currIndex''
+	  left off from the last calls or 0 if it is the first call.  So we use the substring
+	  startIndex through the rest of the string and assume it will be the same type
+	  unless determined otherwise */
 	
 	//interates through until reaching the end of array and/or last index
    	startIndex = currIndex;
@@ -219,13 +222,12 @@ char *TKGetNextToken( TokenizerT * tk ) {
 					printf("octal");
 			}
 		}else{//build decimal, must be decimal 
-			while(isdigit(currentChar)){
-				currIndex++;	
-			}
+			
 			printf("decimal");
 		}
 	} else if(currentChar == '.'){
-		//BuildFloat();
+		char *substring = malloc(tk->inputSize - startIndex * char); //not sure if this works out
+		buildFloat(strncpy(substring, inputString + startIndex, strlen(inputString)));
 
 	}
 	/*  Increment tokenizer struct index to skip delimiters.  Need to account for multiple delimiters*/
@@ -247,6 +249,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	
 }
 
+/* Keep for guidance for now
 
 Token *createWordToken(char *string, TokenizerT *tk){
 	
@@ -264,7 +267,7 @@ Token *createWordToken(char *string, TokenizerT *tk){
 	newToken->tokenType = "word";
 	tk->currIndex = currIndex;
 	return newToken;
-}
+} */
 
 char *buildHex(char *string){
 	while(){
@@ -299,6 +302,9 @@ int buildFloat(char *string){
 
 int buildDec(char *string){
 	
+	while(isdigit(currentChar)){
+		currIndex++;	
+	}
 	return 0;
 }
 /* To be implemented with all single character operators, since we use greedy algorithms,
