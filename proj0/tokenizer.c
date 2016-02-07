@@ -16,6 +16,9 @@ Decided we have two options: to use the tokens need to add something in main to 
 i think weve agreed to this one>	or currently I print out type inside getNextToken and then return the string which should be printed out in main.
 Need to deal with operators 
 Have not deleted of your functions, but I believe currently everything works without any of the helper functions. I wanted to leave them for you jsut in case you wanted to use any of them.
+Do we need to deal with there being no char after a 0?
+Need to add checks that malloc worked properly. In class he said we needed to do that.
+Bad tokens must be printed out in hexform
 */
 
 
@@ -187,64 +190,76 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	char *inputString = tk->inputString;
 	char *currentChar = inputString[tk->currIndex];
 	int currIndex = tk->currIndex;
-	
+	char *startChar = currentChar;
+	char *newToken = "";
 	/* For all conditions, we use the start index which is where 'currIndex''
 	  left off from the last calls or 0 if it is the first call.  So we use the substring
 	  startIndex through the rest of the string and assume it will be the same type
 	  unless determined otherwise */
 	
 	//interates through until reaching the end of array and/or last index
-   	startIndex = currIndex;
-   	
+
+	while(isDelimiter(currentChar)){
+			currentChar++;
+			startChar++;
+		}
+	
 	if(isalpha(currentChar)){//check for word
 
 		while(isalpha(currentChar) || isdigit(currentChar)){
-			currIndex++;
+			currentChar++;
 		}
 		printf("word");//print substring at the end to avoid unnecessary repetition 
 	
 	} else if( isdigit(currentChar)){//check for hex, octal, and decimal
 
 		if(!currentChar){ //check for hex or octal, the negation checks for 0 so this is equivalent to if(currentChar == 0)
-	
 			//if true, found hex value
-			if( !strcmp(tolower(currentChar + 1), 'x')) { 
+			if( !strcmp(tolower(currentChar + 1), 'x')) { //
 			//probably need to deal with the case that nothing comes after the x. I think thats a bad token
-				
+				currentChar+=2;//goes to the char after the x;
+				buildhex(currentChar);
 				
 			}else { //build octal, must be octal if it wasnt hex, unless length 1
-				if(currentChar=>0 || currentChar=<7){
-					currIndex++;
+				while(currentChar=>'0' || currentChar=<'7'){//will always go to char after the first 0
+					currentChar++;
 				}
-				if(currIndex==startIndex)
+				if(currentChar==startChar)
 					printf("decimal");
 				else
 					printf("octal");
 			}
 		}else{//build decimal, must be decimal 
-			
+			while(isdigit(currentChar)){
+				currentChar++;
+			}
 			printf("decimal");
 		}
 	} else if(currentChar == '.'){
 		char *substring = malloc(tk->inputSize - startIndex * char); //not sure if this works out
-		buildFloat(strncpy(substring, inputString + startIndex, strlen(inputString)));
+	//	buildFloat(strncpy(substring, inputString + startIndex, strlen(inputString)));
 
 	}
 	/*  Increment tokenizer struct index to skip delimiters.  Need to account for multiple delimiters*/
-	else if(isDelimiter(currentChar)){
-		currIndex++;
+	/*else if(isDelimiter(currentChar)){
+		currentChar++;
 		while(isDelimiter(currentChar)){
-			currIndex++
+			currentChar++
 		}
-		print(substring); //demishes repetition, << NOT SURE WHAT YOU WANTED HERE
-	} else if(isOp(currentChar)){
+	*/
+	} else 
+		isOp(currentChar);
 		
 	}
 
 	/* Update tokenizerT's currIndex for the next tokens */
-	tk->currIndex = currIndex;
+	tk->currIndex += currentChar - startChar;//accounts for the space moved
+
+	//creates newToken by having it point to the 
+	token = malloc(currentChar - startChar + 1 * char);
+	memcpy(newToken, startChar, currentChar - startChar+1);
 	
-	/* add '\0' to end of array */
+	/* adds '\0' to end of array */
 	return newToken;
 	
 }
@@ -269,24 +284,25 @@ Token *createWordToken(char *string, TokenizerT *tk){
 	return newToken;
 } */
 
-char *buildHex(char *string){
+int *buildHex(char * currentChar){
+	char *startChar = currentChar;
 	while(){
 		if(currentChar=>0 || currentChar=<9){
-			currIndex++;
+			currentChar++;
 			continue;
 		}else if(currentChar=>"A" || currentChar=<"F"){ //or should it be the other way round?
-			currIndex++;
+			currentChar++;
 			continue;
 		}else if(currentChar=>"a" || currentChar=<"f"){
-			currIndex++;
+			currentChar++;
 			continue;
 		}
 	break;
 	}
-	if(currIndex-startIndex == 2)
+	if(currentChar == startChar)
 		printf("bad token");
 	else
-		printf("hexadecimal");	
+		printf("hexadecimal");
 	return 0;
 }
 
@@ -318,7 +334,7 @@ int isOp (char *c){
 
 /* Takes in the current token string from main and determines its type, then returns the type.
     Starts checks with first character and then goes from there */
-void createTokensFromString(char *tokenString, TokenizerT *tk){
+void createTokensFromString(char *tokenString, TokenizerT *tk){//currently not being used i think it can be scrapped
 	
 	/* Use int indexes to keep track of where we are in the string */
 	
