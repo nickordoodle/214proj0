@@ -325,11 +325,121 @@ int buildDec(char *string){
 }
 /* To be implemented with all single character operators, since we use greedy algorithms,
     we will only consider single char operators and start the sequence over */
-int isOp (char *c){
-	
-	char *operatorsArray[25] = { '(', ')', '[', ']', '*', '&', '-', '!' };
-	return 0;
-	
+int isOp (char *c){ //returns 1 if opporator and 0 if bad token
+	switch (c){
+		case ' ':
+			return 1;
+			break;
+		case '*':
+			printf("indirect");
+			return 1;
+			break;
+		case '&':
+			printf("address");
+			return 1;
+			break;
+		case '-':
+			printf("minus");
+			return 1;
+			break;
+
+		case '!':
+			if(*(currentChar + 1) == '='){
+				currentChar++;
+				printf("not equals");
+				return 1;
+			}else{
+				printf("negate");
+				return 1;
+			}
+			break;
+		case '~':
+			if(*(currentChar + 1) == '-'){
+				currentChar++;
+				printf("dec");
+				return 1;
+			}
+			printf("1's comp");
+			return 1;
+			break;
+		case '*':
+			printf("indirect");
+			return 1;
+			break;	
+		
+
+//Sizeof(cast) is put with opporators 
+		case '/':
+			printf("divide");
+			return 1;
+			break;
+		case '%':
+			printf("modulus");
+			return 1;
+			break;
+		case '+':
+			if(*(currentChar + 1) == '+'){
+				currentChar++;
+				printf("inc");
+				return 1;
+			}
+			printf("add");
+			return 1;
+			break;
+		case '<':
+			if(*(currentChar + 1) == '='){
+				currentChar++;
+				printf("less or equals");
+				return 1;
+			}else if(*(currentChar + 1) == '<'){
+				currentChar++;
+				printf("shift left");
+				return 1;
+			}
+			printf("less than");
+			return 1;
+			break;
+		case '>':
+			if(*(currentChar + 1) == '='){
+				currentChar++;
+				printf("greater or equals");
+				return 1;
+			}else if(*(currentChar + 1) == '>'){
+				currentChar++;
+				printf("shift right");
+				return 1;
+			}
+			printf("greater than");
+			return 1;
+			break;
+		case '^':
+			printf("bitwise exclusive or");
+			return 1;
+			break;
+		case '|':
+			printf("bitwise or");
+			return 1;
+			break;
+
+		//double char opporators 
+		
+		case '=':
+			if(*(currentChar + 1) == '='){
+				currentChar++;
+				printf("equals");
+				return 1;
+			}else{
+				printf("bad token");
+				return 0;
+			}
+			break;
+
+		default:
+			printf("bad token")
+			return 0;
+			break;
+	}
+
 }
 
 /* Takes in the current token string from main and determines its type, then returns the type.
@@ -416,7 +526,8 @@ int main(int argc, char **argv) {
 	while (hasNextToken(tokenizer)){
 		
 		/* Get token string, the type has already been printed */
-		char *newTokenString = TKGetNextToken(tokenizer);
+		char *newToken = TKGetNextToken(tokenizer);
+		printf(" \" %s\"" "\n, newToken)
 			
 	}
 	
