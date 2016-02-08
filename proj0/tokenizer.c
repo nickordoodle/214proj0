@@ -19,6 +19,7 @@ Have not deleted of your functions, but I believe currently everything works wit
 Do we need to deal with there being no char after a 0?
 Need to add checks that malloc worked properly. In class he said we needed to do that.
 Bad tokens must be printed out in hexform
+Need to deal with cases that built token in function
 */
 
 
@@ -31,6 +32,7 @@ Bad tokens must be printed out in hexform
  *  This implementation uses a linked list of "Tokens" for readability, modularity, and ease of use 
  *  The inputString is the standard program argument, currIndex is how far through we are
  * through the string and inputSize is the length of the inputString.
+ 
  */
  
 struct TokenizerT_ {
@@ -286,24 +288,28 @@ Token *createWordToken(char *string, TokenizerT *tk){
 
 int *buildHex(char * currentChar){
 	char *startChar = currentChar;
+	int counter = 0;
 	while(){
 		if(currentChar=>0 || currentChar=<9){
 			currentChar++;
+			counter++;
 			continue;
 		}else if(currentChar=>"A" || currentChar=<"F"){ //or should it be the other way round?
 			currentChar++;
+			counter++
 			continue;
 		}else if(currentChar=>"a" || currentChar=<"f"){
 			currentChar++;
+			counter++;
 			continue;
 		}
 	break;
 	}
-	if(currentChar == startChar)
+	if(counter == 0)
 		printf("bad token");
 	else
 		printf("hexadecimal");
-	return 0;
+	return counter;
 }
 
 int buildOct(char *string){
@@ -325,7 +331,7 @@ int buildDec(char *string){
 }
 /* To be implemented with all single character operators, since we use greedy algorithms,
     we will only consider single char operators and start the sequence over */
-int isOp (char *c){ //returns 1 if opporator and 0 if bad token
+int isOp (char *c){ //returns positive if opporator and negative if bad token. The number corresponds with the number 
 	switch (c){
 		case ' ':
 			return 1;
@@ -347,7 +353,7 @@ int isOp (char *c){ //returns 1 if opporator and 0 if bad token
 			if(*(currentChar + 1) == '='){
 				currentChar++;
 				printf("not equals");
-				return 1;
+				return 2;
 			}else{
 				printf("negate");
 				return 1;
@@ -357,7 +363,7 @@ int isOp (char *c){ //returns 1 if opporator and 0 if bad token
 			if(*(currentChar + 1) == '-'){
 				currentChar++;
 				printf("dec");
-				return 1;
+				return 2;
 			}
 			printf("1's comp");
 			return 1;
@@ -381,7 +387,7 @@ int isOp (char *c){ //returns 1 if opporator and 0 if bad token
 			if(*(currentChar + 1) == '+'){
 				currentChar++;
 				printf("inc");
-				return 1;
+				return 2;
 			}
 			printf("add");
 			return 1;
@@ -390,11 +396,11 @@ int isOp (char *c){ //returns 1 if opporator and 0 if bad token
 			if(*(currentChar + 1) == '='){
 				currentChar++;
 				printf("less or equals");
-				return 1;
+				return 2;
 			}else if(*(currentChar + 1) == '<'){
 				currentChar++;
 				printf("shift left");
-				return 1;
+				return 2;
 			}
 			printf("less than");
 			return 1;
@@ -403,11 +409,11 @@ int isOp (char *c){ //returns 1 if opporator and 0 if bad token
 			if(*(currentChar + 1) == '='){
 				currentChar++;
 				printf("greater or equals");
-				return 1;
+				return 2;
 			}else if(*(currentChar + 1) == '>'){
 				currentChar++;
 				printf("shift right");
-				return 1;
+				return 2;
 			}
 			printf("greater than");
 			return 1;
@@ -427,16 +433,16 @@ int isOp (char *c){ //returns 1 if opporator and 0 if bad token
 			if(*(currentChar + 1) == '='){
 				currentChar++;
 				printf("equals");
-				return 1;
+				return 2;
 			}else{
 				printf("bad token");
-				return 0;
+				return -1;
 			}
 			break;
 
 		default:
 			printf("bad token")
-			return 0;
+			return -1;
 			break;
 	}
 
