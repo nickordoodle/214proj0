@@ -234,7 +234,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	else if(isDelimiter(currentChar)){
 		currIndex++;
 		while(isDelimiter(currentChar)){
-			currIndex++
+			currIndex++;
 		}
 		print(substring); //demishes repetition, << NOT SURE WHAT YOU WANTED HERE
 	} else if(isOp(currentChar)){
