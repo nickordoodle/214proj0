@@ -191,7 +191,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	   in the functions. */
 	char *inputString = tk->inputString;
 	char *currentChar = inputString[tk->currIndex];
-	int currIndex = tk->currIndex;
+	int counter = 0;
 	char *startChar = currentChar;
 	char *newToken = "";
 	/* For all conditions, we use the start index which is where 'currIndex''
@@ -220,7 +220,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
 			if( !strcmp(tolower(currentChar + 1), 'x')) { //
 			//probably need to deal with the case that nothing comes after the x. I think thats a bad token
 				currentChar+=2;//goes to the char after the x;
-				buildhex(currentChar);
+				currentChar += buildhex(currentChar);
 				
 			}else { //build octal, must be octal if it wasnt hex, unless length 1
 				while(currentChar=>'0' || currentChar=<'7'){//will always go to char after the first 0
@@ -250,8 +250,13 @@ char *TKGetNextToken( TokenizerT * tk ) {
 		}
 	*/
 	} else 
-		isOp(currentChar);
-		
+		counter = isOp(currentChar);
+		if(counter > 0){
+			currentChar+=counter;	
+		}
+		else{
+			currentChar-=counter;
+		}
 	}
 
 	/* Update tokenizerT's currIndex for the next tokens */
