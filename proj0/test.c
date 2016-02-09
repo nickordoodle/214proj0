@@ -27,8 +27,11 @@ int main(int argc, char **argv) {
 	
 	(*currIndex)++;
 	
+
+	char *ptr = tk->inputString;
 	
-	printf("%d\n", *currIndex);
+	int result = strcmp(*(ptr), 'x');
+	printf("%d\n", result);
 
 
 	return 0;
