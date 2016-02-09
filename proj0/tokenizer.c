@@ -99,33 +99,22 @@ void TKDestroy( TokenizerT * tk ) {
 		
 }
 
-int isDelimiter (char c){
-	switch (c){
-		case ' ':
-			return 1;
-			break;
-		case '\t':
-			return 1;
-			break;
-		case '\v':
-			return 1;
-			break;
-		case '\f':
-			return 1;
-			break;
-		case '\n':
-			return 1;
-			break;
-		case '\r':
-			return 1;
-			break;
-		default:
-			return 0;
-			break;
-	}
+int isDelimiter(char * c){
+        if(*c == ' '){
+                return 1;
+        }else if(*c == '\'){
+                if(*(c+1)== 't'
+                        ||*(c+1)== 'v'
+                        ||*(c+1)== 'f'
+                        ||*(c+1)== 'n'
+                        ||*(c+1)== 'r'){
+                        return 2;
+                }
+        }
+        return 0;
 }
 
-int buildHex(char * currentChar){
+int buildHex(char * currentChar){	
 
 	int counter = 0;
 	while(  (*currentChar >= '0' && *currentChar <= '9')  
@@ -351,10 +340,16 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	int newTokenSize = 0;
 
 	/* Ignore and skip any delimiters, they are not tokens */
-	while(isDelimiter(*currentChar)){	
-		currentChar++;
-		startChar++;
-	}
+	counter = isDelimiter(currentChar);
+        printf("counter: %d\n", counter);
+        while(counter != 0 ){
+                printf("entered loop");
+                currentChar+=counter;
+                startChar+=counter;
+                counter = 0;
+                counter = isDelimiter(currentChar);
+        }
+
 	
 	/* Check for word */
 	if(isalpha(*currentChar)){
