@@ -11,9 +11,9 @@
 #include <ctype.h>
 
 /*To Do:
+Do we need to deal with there being no char after a 0?
 Need to add checks that malloc worked properly. In class he said we needed to do that.
 Bad tokens must be printed out in hexform
-Need to deal with cases that built token in function
 */
 
 
@@ -327,10 +327,14 @@ int hasNextToken(TokenizerT *tk){
  * is generally Word, Hexidecimal, Octal, Float, Decimal.
  * 
  
-	Build current token based on inputString and iterate
-	until delimiter found, new type, or end of array.
+Build current token based on inputString and iterate
+until delimiter found, new type, or end of array.
+ * Algorithm: If first token is character/letter, then we have a word always. 
+ * Word, Hex, Octal, Dec, Float
+ */
 
-	For all conditions, we use the start index which is where 'currIndex''
+
+	/*For all conditions, we use the start index which is where 'currIndex''
 	left off from the last calls or 0 if it is the first call.  As the program iterates,
 	currentChar increases and eventually stops.  We then take the substring
 	of everything in between currentChar and startChar to get our new token.
@@ -377,7 +381,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
 					currentChar++;
 				}
 				if(currentChar==startChar)
-					printf("decimal");
+					printf("decimal");/not workiing
 				else  
 					printf("octal");
 			}
@@ -447,7 +451,7 @@ int main(int argc, char **argv) {
 		
 		/* Get token string, the type has already been printed */
 		char *newToken = TKGetNextToken(tokenizer);
-		printf(" %s\n", newToken);
+		printf(" \"%s\"\n", newToken);// this puts "" around the token when we print it out like in the examples.
 		free(newToken);
 			
 	}
