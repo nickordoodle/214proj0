@@ -1,0 +1,40 @@
+
+Tokenizer - Greedy Algorithm
+
+The purpose of this program is to take in a string literal as input and determine
+what type of tokens it contains while printing out each token's value along with
+its type on a separate line.  
+
+1) First, we check to see if the program has arguments, if so we continue.
+
+2) Now we allocate memory for a "TokenizerT" struct which holds the inputString,
+our current index we are iterating on, and the input size.  We decided any more
+properties would be overkill and a waste of memory.
+
+3) Next, we utilize our TokenizerT struct as our primary data source to extract the 
+tokens from the input.  This is generally done in a loop that keeps iterating until
+there are no more characters left in the string.  Refer to hasNextToken to learn
+more which acts as the while loop condition.
+
+4) Inside of our main loop, we utilize "TKGetNextToken" function to do the heavy lifting
+for us.  In short, TKGetNextToken returns the next valid token by going through
+various checks.  We do initial checks on the current character in the input string that
+will give us more information on what type of token is coming up.  For example, we
+know for sure any letter will start a word.  But for a token like hexidecimals, we first
+check to see if the character is a 0 followed by an case-insensitive x.  From there on,
+we can start building our new tokens.  In general, this is done by keeping track
+of the start index and index where the token ends.  After a type is determined,
+TKGetNextToken prints out the type of token instead of creating extra functions
+and rewriting code, so we just utilized the implementation of TKGetNextToken
+to do it on the spot.  Then we take that specific token value, allocate memory for it, 
+and return it to main.  The type has already printed from TKGetNextToken and right
+after in main, we print out the token value with a new line after it.  Then we 
+free the token value memory so that there is no memory wasted.  This continues
+until there are no more tokens.
+
+5) After we have iterated through the entire string, we free the TokenizerT memory
+and the program ends.
+
+Complexity Analysis: 
+
+

@@ -11,12 +11,6 @@
 #include <ctype.h>
 
 /*To Do:
-Need to make currentChar actually represent a char. You changed it from me accessing an index in the array each time. Also im iterating through so currentChar needs to be going one char over each time the local currIndex is going up one.
-Decided we have two options: to use the tokens need to add something in main to correctly deal look at the inside of the tokens 
-i think weve agreed to this one>	or currently I print out type inside getNextToken and then return the string which should be printed out in main.
-Need to deal with operators 
-Have not deleted of your functions, but I believe currently everything works without any of the helper functions. I wanted to leave them for you jsut in case you wanted to use any of them.
-Do we need to deal with there being no char after a 0?
 Need to add checks that malloc worked properly. In class he said we needed to do that.
 Bad tokens must be printed out in hexform
 Need to deal with cases that built token in function
@@ -29,10 +23,9 @@ Need to deal with cases that built token in function
  * is in while iterating through the string.  delimPositions will be an array of indexes
  * that refer to the indices where a delimiter exists in the inputString.
  *
- *  This implementation uses a linked list of "Tokens" for readability, modularity, and ease of use 
- *  The inputString is the standard program argument, currIndex is how far through we are
- * through the string and inputSize is the length of the inputString.
- 
+ *  This implementation uses an inputString as the standard program argument, 
+ * currIndex is how far through we are iterating through the string inputSize is the 
+ * length of the inputString.
  */
  
 struct TokenizerT_ {
@@ -54,7 +47,9 @@ struct TokenizerT_ {
  * If the function succeeds, it returns a non-NULL TokenizerT.
  * Else it returns NULL.
  *
- * You need to fill in this function as part of your implementation.
+ * First, check if string is empty or NULL.  If not, set all property values 
+ * equal to 0 initially.  Allocate memory for pointer variables and make copies of variables,
+ * then set them equal to the fields of the TokenizerT struct.  Return the struct.
  */
 
 TokenizerT *TKCreate( char * ts ) {
@@ -70,7 +65,7 @@ TokenizerT *TKCreate( char * ts ) {
 	TokenizerT *tokenizer = 0;
 
 	/* Allocate memory for the tokenizer and its fields */
-	inputString = (char *)malloc(sizeof(ts));
+	inputString = malloc(strlen(ts) + 1);
 	tokenizer = malloc(sizeof(TokenizerT));
 
 	/*  Copy the string paramter to inputString variable and get inputSize */
@@ -91,14 +86,17 @@ TokenizerT *TKCreate( char * ts ) {
  * TKDestroy destroys a TokenizerT object.  It should free all dynamically
  * allocated memory that is part of the object being destroyed.
  *
- * First, free all allocated properties/elements of the TokenizerT struct. 
- * Then free the pointer to the struct itself
+ * First, check if tokenizer is not null, then free all allocated fields of the 
+ * TokenizerT struct which is only inputString. Then free the pointer to the struct itself.
  */
 
 void TKDestroy( TokenizerT * tk ) {
 
-	free(tk->inputString);
-	free(tk);
+	if(tk){
+		free(tk->inputString);
+		free(tk);
+	}
+		
 }
 
 int isDelimiter (char c){
@@ -162,36 +160,51 @@ int buildDecOrFloat(char *currentChar){
 	}*/
 	return 0;
 }
-/* To be implemented with all single character operators, since we use greedy algorithms,
-    we will only consider single char operators and start the sequence over */
-int isOp (char *currentChar){ //returns positive if opporator and negative if bad token. The number corresponds with the number 
+
+/* Executes checks for the C operators located on the reference sheet.  Some extra
+*  checks are necessary for operators that have more than one character.  Returns 
+* positive if operator and negative if bad token.  */
+
+int isOp (char *currentChar){ 
 	switch (*currentChar){
 		case ' ':
 			return 1;
-			break;
 		case '*':
-			printf("indirect");
+			printf("multiply");
 			return 1;
-			break;
 		case '&':
-			printf("address");
+			if(*(currentChar + 1) == '&'){
+				currentChar++;
+				printf("logical and");
+				return 2;
+			}
+			printf("bitwise and");
 			return 1;
-			break;
 		case '-':
+			if(*(currentChar + 1) == '-'){
+				currentChar++;
+				printf("decrement");
+				return 2;
+			}
+			else if(*(currentChar + 1) == '>'){
+				currentChar++;
+				printf("structure pointer");
+				return 2;
+			} else if(*(currentChar + 1) == '='){
+				currentChar++;
+				printf("minus equals");
+				return 2;
+			}
 			printf("minus");
 			return 1;
-			break;
-
 		case '!':
 			if(*(currentChar + 1) == '='){
 				currentChar++;
 				printf("not equals");
 				return 2;
-			}else{
-				printf("negate");
-				return 1;
 			}
-			break;
+			printf("negate");
+			return 1;
 		case '~':
 			if(*(currentChar + 1) == '-'){
 				currentChar++;
@@ -200,30 +213,30 @@ int isOp (char *currentChar){ //returns positive if opporator and negative if ba
 			}
 			printf("1's comp");
 			return 1;
-			break;
 
 //Sizeof(cast) is put with opporators 
 		case '/':
 			printf("divide");
 			return 1;
-			break;
 		case '%':
 			printf("modulus");
 			return 1;
-			break;
 		case '+':
 			if(*(currentChar + 1) == '+'){
 				currentChar++;
-				printf("inc");
+				printf("increment");
+				return 2;
+			} else if( *(currentChar + 1) == '='){
+				currentChar++;
+				printf("plus equals");
 				return 2;
 			}
-			printf("add");
+			printf("plus");
 			return 1;
-			break;
 		case '<':
 			if(*(currentChar + 1) == '='){
 				currentChar++;
-				printf("less or equals");
+				printf("less than or equal to");
 				return 2;
 			}else if( *(currentChar + 1) == '<'){
 				currentChar++;
@@ -232,11 +245,10 @@ int isOp (char *currentChar){ //returns positive if opporator and negative if ba
 			}
 			printf("less than");
 			return 1;
-			break;
 		case '>':
 			if( *(currentChar + 1) == '='){
 				currentChar++;
-				printf("greater or equals");
+				printf("greater than or equal to");
 				return 2;
 			}else if( *(currentChar + 1) == '>'){
 				currentChar++;
@@ -245,61 +257,60 @@ int isOp (char *currentChar){ //returns positive if opporator and negative if ba
 			}
 			printf("greater than");
 			return 1;
-			break;
 		case '^':
 			printf("bitwise exclusive or");
 			return 1;
-			break;
 		case '|':
+			if( *(currentChar + 1) == '|'){
+				currentChar++;
+				printf("logical or");
+				return 2;
+			}
 			printf("bitwise or");
 			return 1;
-			break;
-
-		//double char opporators 
-		
 		case '=':
-			if( *currentChar == '='){
-				currentChar++;
-				printf("equals");
-				return 2;
-			}else{
-				printf("bad token");
-				return -1;
-			}
-			break;
-
+			printf("equals");
+			return 1;
+		case '(':
+			printf("left parenthesis");
+			return 1;
+		case ')':
+			printf("right parenthesis");
+			return 1;
+		case '[':
+			printf("left bracket");
+			return 1;
+		case ']':
+			printf("right bracket");
+			return 1;
+		case '.':
+			printf("structure member");
+			return 1;
+		case '?':
+			printf("true");
+			return 1;
+		case ':':
+			printf("false");
+			return 1;
 		default:
 			printf("bad token");
 			return -1;
-			break;
 	}
 
 	return 0;
 }
 
+/* Helper function for main to see if we have iterated through entire input or not */
 
+int hasNextToken(TokenizerT *tk){
+	
+	if(!tk || tk->inputString[tk->currIndex] == '\0'){
+		return 0;
+	} 
+	
+	return 1;
 
-/* ( ) [ ]  ->
-function array element structure member structure pointer
-UNARY OPERATORS ---------------------------------------- RIGHT TO LEFT
-* & - ! ~ ++ -- sizeof ( )
-indirect address minus negate 1’s comp inc dec cast
-BINARY OPERATORS --------- decreasing precedence ---------- LEFT TO RIGHT
-* multiply / divide % modulus
-+ add - subtract
->> shift right << shift left
-< less than > greater than <= less or equal >= greater or equal
-== equals != not equals
-& bitwise and
-^ bitwise exclusive or
-| bitwise or
-&& logical and || logical or
-CONDITIONAL EXPRESSION ---------------------------------------- RIGHT TO LEFT
-Condition ? true : false
-ASSIGNMENT OPERATORS ---------------------------------------- RIGHT TO LEFT
-- += -= *= /= %= >>= <<= &= ^= |= see BINARY OPERATORS
-COMMA OPERATOR ---------------------------------------- LEFT TO RIGHT
-, discards value of left expression */
+}
 
 
 /*
@@ -311,38 +322,22 @@ COMMA OPERATOR ---------------------------------------- LEFT TO RIGHT
  * If the function succeeds, it returns a C string (delimited by '\0')
  * containing the token.  Else it returns 0.
  *
- * Algorithm: If first token is character/letter, then we have a word always. 
- * Word, Hex, Octal, Dec, Float
+ * Algorithm: If first token is character/letter, then we have a word always. Then follow
+ * an order of precedence to promote a "greedy" algorithm.  Order of precedence
+ * is generally Word, Hexidecimal, Octal, Float, Decimal.
+ * 
+ 
+	Build current token based on inputString and iterate
+	until delimiter found, new type, or end of array.
+
+	For all conditions, we use the start index which is where 'currIndex''
+	left off from the last calls or 0 if it is the first call.  As the program iterates,
+	currentChar increases and eventually stops.  We then take the substring
+	of everything in between currentChar and startChar to get our new token.
  */
-
-int hasNextToken(TokenizerT *tk){
-	
-	char *inputString = tk->inputString;
-	if(!tk || inputString[tk->currIndex + 1] == '\0'){
-		return 0;
-	} 
-	
-	return 1;
-
-}
 
 char *TKGetNextToken( TokenizerT * tk ) {
 
-	/*Build current token based on inputString and iterate
-	  until delimiter found, new type, or end of array.
-	  The BuildFunctions will take the tokenizer parameter and the newToken
-	  string as arguments and finish iterating through until no more of their type is
-       found.  Each new character that is still of the same type is added
-       to the newToken String.*/
-	
-	/* These variables are useful for easier readability and so that we keep referencing
-	   the TokenizerT struct instead of making local variable copies that may differ values
-	   in the functions. */
-	   
-	   	/* For all conditions, we use the start index which is where 'currIndex''
-	  left off from the last calls or 0 if it is the first call.  So we use the substring
-	  startIndex through the rest of the string and assume it will be the same type
-	  unless determined otherwise */
 	
 	char *inputString = tk->inputString;
 	char *currentChar = &inputString[tk->currIndex];
@@ -351,30 +346,34 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	char *newToken = 0;
 	int newTokenSize = 0;
 
-	//interates through until reaching the end of array and/or last index
-
+	/* Ignore and skip any delimiters, they are not tokens */
 	while(isDelimiter(*currentChar)){	
 		currentChar++;
 		startChar++;
 	}
 	
-	if(isalpha(*currentChar)){//check for word
-
+	/* Check for word */
+	if(isalpha(*currentChar)){
+		/* Build word */
 		while(isalpha(*currentChar) || isdigit(*currentChar)){
 			currentChar++;
 		}
-		printf("word");//print substring at the end to avoid unnecessary repetition 
+		printf("word");
 	
-	} else if( isdigit(*currentChar)){//check for hex, octal, and decimal
+	} 
+	/* Check for Hex, Octal, Floats, and Decimals */
+	else if( isdigit(*currentChar)){
 		
-		if(*currentChar == '0'){ //check for hex or octal
-			//if true, found hex value
-			if( tolower(*(currentChar + 1)) == 'x') { //
-				currentChar+=2;//goes to the char after the x;
+		/* Octal or Hex */
+		if(*currentChar == '0'){ 
+		
+			/* Found Hex */
+			if( tolower(*(currentChar + 1)) == 'x') { 
+				currentChar+=2;
 				currentChar += buildHex(currentChar);
 				
-			} else { //build octal, must be octal if it wasnt hex, unless length 1
-				while( (*currentChar >= '0' && *currentChar <= '7') && (*currentChar != '\0') ){//will always go to char after the first 0
+			} else { /* Build Octal/Decimal if not Hex */
+				while( (*currentChar >= '0' && *currentChar <= '7') && (*currentChar != '\0') ){
 					currentChar++;
 				}
 				if(currentChar==startChar)
@@ -382,7 +381,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
 				else  
 					printf("octal");
 			}
-		} else{//build decimal, must be decimal 
+		} else{/* Build Decimal unless period present, then build Float */
 			int periodFound = 0;
 			while(isdigit(*currentChar) && periodFound <= 1){
 				if(*(currentChar + 1) == '.' &&
@@ -408,42 +407,23 @@ char *TKGetNextToken( TokenizerT * tk ) {
 			currentChar-=counter;
 	}
 	
+	/* Calculate the token size using our char pointers */
 	newTokenSize = strlen(startChar) - strlen(currentChar) + 1;
 	/* Update tokenizerT's currIndex for the next tokens */
-	tk->currIndex = strlen(inputString) - strlen(currentChar);//accounts for the space moved
-
-	//creates newToken by having it point to the
-
+	tk->currIndex = strlen(inputString) - strlen(currentChar);
+	
+	/* Allocate memory for new token */
 	newToken = malloc(sizeof(char) * newTokenSize);
+	/* Copy substring of the input to get new token value */
 	strncpy(newToken, startChar, newTokenSize - 1);
 	
-	/* adds '\0' to end of array */
+	/* Add '\0' to end of array for delimiter */
 	newToken[newTokenSize] = '\0';
 	
 	return newToken;
 
 	
 }
-
-/* Keep for guidance for now
-
-Token *createWordToken(char *string, TokenizerT *tk){
-	
-	Token *newToken = NULL;
-	newToken = malloc(sizeof(Token));
-	int currIndex = 0;
-	char currChar = string[currIndex];
-	
-	while((isalpha(currChar) || isdigit(currChar)) && currIndex < tk->inputSize - 1){
-			currIndex++;
-	}
-	
-	newToken->string = malloc(currIndex * sizeof(char));
-	strncpy(newToken->string, string, currIndex);
-	newToken->tokenType = "word";
-	tk->currIndex = currIndex;
-	return newToken;
-} */
 
 
  /* 
@@ -453,26 +433,6 @@ Token *createWordToken(char *string, TokenizerT *tk){
  * Each token should be printed on a separate line.
  */
 
-
-/*
- Token Examples: 1234ab is 2 tokens
-			  12340b  is 2 tokens
-
-		       12340x is 2 tokens (BE GREEDY IN CURRENT TOKEN)
-			  dddddN  --> decimals and numbers
-
-			0 8 can be bad token or two numbers
-			
-			01234 is definitely octal
-
-			0x213 is hex
-
-			0129820x123 is best interpreted as decimal and a word
-
-
-	JUST SHOW EVERYTHING WITH DOCUMENTATION AND MAKE ASSUMPTIONS/RULES
-	BASED ON SMALL AMBIGUITIES.  "ROOM FOR INTERPRETATION"
-*/
 int main(int argc, char **argv) {
 
 	/*NO ARGUMENTS, EXIT PROGRAM*/
@@ -488,6 +448,7 @@ int main(int argc, char **argv) {
 		/* Get token string, the type has already been printed */
 		char *newToken = TKGetNextToken(tokenizer);
 		printf(" %s\n", newToken);
+		free(newToken);
 			
 	}
 	
