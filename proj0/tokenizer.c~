@@ -353,7 +353,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	  unless determined otherwise */
 	
 	char *inputString = tk->inputString;
-	char *currentChar = inputString[tk->currIndex];
+	char *currentChar = &inputString[tk->currIndex];
 	int counter = 0;
 	char *startChar = currentChar;
 	char *newToken = 0;
@@ -375,7 +375,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	
 	} else if( isdigit(*currentChar)){//check for hex, octal, and decimal
 		
-		if(!(*currentChar)){ //check for hex or octal, the negation checks for 0 so this is equivalent to if(currentChar == 0)
+		if(*currentChar == '0'){ //check for hex or octal, the negation checks for 0 so this is equivalent to if(currentChar == 0)
 			//if true, found hex value
 			if( tolower(*(currentChar + 1)) == 'x') { //
 			//probably need to deal with the case that nothing comes after the x. I think thats a bad token
@@ -383,7 +383,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
 				currentChar += buildHex(currentChar);
 				
 			} else { //build octal, must be octal if it wasnt hex, unless length 1
-				while(*currentChar >= '0' || *currentChar <= '7'){//will always go to char after the first 0
+				while( (*currentChar >= '0' || *currentChar <= '7') && (*currentChar != '\0') ){//will always go to char after the first 0
 					currentChar++;
 				}
 				if(currentChar==startChar)
