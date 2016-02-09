@@ -14,6 +14,8 @@
 Do we need to deal with there being no char after a 0?
 Need to add checks that malloc worked properly. In class he said we needed to do that.
 Bad tokens must be printed out in hexform
+Bad test cases:
+	./a1.out "123.123" > bad token
 */
 
 
