@@ -128,7 +128,7 @@ int isDelimiter (char c){
 }
 
 int buildHex(char * currentChar){
-	//char *startChar = currentChar;   This var is unused and commented out for now
+
 	int counter = 0;
 	while(  (*currentChar >= '0' && *currentChar <= '9')  
 				    ||
@@ -155,12 +155,23 @@ int buildFloat(char *string){
 	return 0;
 }
 
-int buildDec(char *string){
-	/*
-	while(isdigit(currentChar)){
-		//currIndex++;	
-	}*/
-	return 0;
+void printDecOrFloat(char *currentChar){
+	
+	int periodFound = 0;
+	while(isdigit(*currentChar) && periodFound <= 1 && *currentChar != '\0'){
+		if(*(currentChar + 1) == '.' &&
+	                isdigit(*(currentChar + 2)) &&
+	                !periodFound){
+			periodFound++;
+			currentChar+= 2;
+		} else{
+			currentChar++;
+		}
+	}
+	if(periodFound)
+		printf("float");
+	else
+		printf("decimal");
 }
 /* To be implemented with all single character operators, since we use greedy algorithms,
     we will only consider single char operators and start the sequence over */
@@ -258,7 +269,7 @@ int isOp (char *currentChar){ //returns positive if opporator and negative if ba
 		//double char opporators 
 		
 		case '=':
-			if( *(currentChar + 1) == '='){
+			if( *currentChar == '='){
 				currentChar++;
 				printf("equals");
 				return 2;
@@ -318,7 +329,7 @@ COMMA OPERATOR ---------------------------------------- LEFT TO RIGHT
 int hasNextToken(TokenizerT *tk){
 	
 	char *inputString = tk->inputString;
-	if(!tk || inputString[tk->currIndex + 1] == '\0'){
+	if(!tk || inputString[tk->currIndex] == '\0' || inputString[tk->currIndex + 1] == '\0'){
 		return 0;
 	} 
 	
@@ -367,10 +378,9 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	
 	} else if( isdigit(*currentChar)){//check for hex, octal, and decimal
 		
-		if(*currentChar == '0'){ //check for hex or octal, the negation checks for 0 so this is equivalent to if(currentChar == 0)
+		if(*currentChar == '0'){ //check for hex or octal
 			//if true, found hex value
 			if( tolower(*(currentChar + 1)) == 'x') { //
-			//probably need to deal with the case that nothing comes after the x. I think thats a bad token
 				currentChar+=2;//goes to the char after the x;
 				currentChar += buildHex(currentChar);
 				
@@ -384,10 +394,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
 					printf("octal");
 			}
 		} else{//build decimal, must be decimal 
-			while(isdigit(*currentChar)){
-				currentChar++;
-			}
-			printf("decimal");
+			printDecOrFloat(currentChar);
 
 		}
 	} else {

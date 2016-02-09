@@ -155,7 +155,7 @@ int buildFloat(char *string){
 	return 0;
 }
 
-int buildDec(char *string){
+int buildDecOrFloat(char *currentChar){
 	/*
 	while(isdigit(currentChar)){
 		//currIndex++;	
@@ -258,7 +258,7 @@ int isOp (char *currentChar){ //returns positive if opporator and negative if ba
 		//double char opporators 
 		
 		case '=':
-			if( *(currentChar + 1) == '='){
+			if( *currentChar == '='){
 				currentChar++;
 				printf("equals");
 				return 2;
@@ -367,10 +367,9 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	
 	} else if( isdigit(*currentChar)){//check for hex, octal, and decimal
 		
-		if(*currentChar == '0'){ //check for hex or octal, the negation checks for 0 so this is equivalent to if(currentChar == 0)
+		if(*currentChar == '0'){ //check for hex or octal
 			//if true, found hex value
 			if( tolower(*(currentChar + 1)) == 'x') { //
-			//probably need to deal with the case that nothing comes after the x. I think thats a bad token
 				currentChar+=2;//goes to the char after the x;
 				currentChar += buildHex(currentChar);
 				
@@ -384,10 +383,21 @@ char *TKGetNextToken( TokenizerT * tk ) {
 					printf("octal");
 			}
 		} else{//build decimal, must be decimal 
-			while(isdigit(*currentChar)){
-				currentChar++;
+			int periodFound = 0;
+			while(isdigit(*currentChar) && periodFound <= 1){
+				if(*(currentChar + 1) == '.' &&
+			                isdigit(*(currentChar + 2)) &&
+			                !periodFound){
+					periodFound++;
+					currentChar+= 2;
+				} else{
+					currentChar++;
+				}
 			}
-			printf("decimal");
+			if(periodFound)
+				printf("float");
+			else
+				printf("decimal");
 
 		}
 	} else {
