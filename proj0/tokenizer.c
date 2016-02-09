@@ -14,12 +14,11 @@
 Need to make currentChar actually represent a char. You changed it from me accessing an index in the array each time. Also im iterating through so currentChar needs to be going one char over each time the local currIndex is going up one.
 Decided we have two options: to use the tokens need to add something in main to correctly deal look at the inside of the tokens 
 i think weve agreed to this one>	or currently I print out type inside getNextToken and then return the string which should be printed out in main.
-Need to deal with operators 
 Have not deleted of your functions, but I believe currently everything works without any of the helper functions. I wanted to leave them for you jsut in case you wanted to use any of them.
 Do we need to deal with there being no char after a 0?
 Need to add checks that malloc worked properly. In class he said we needed to do that.
 Bad tokens must be printed out in hexform
-Need to deal with cases that built token in function
+Might need to fix hasnexttoken i think it might exit a char early.
 */
 
 
@@ -318,7 +317,7 @@ COMMA OPERATOR ---------------------------------------- LEFT TO RIGHT
 int hasNextToken(TokenizerT *tk){
 	
 	char *inputString = tk->inputString;
-	if(!tk || inputString[tk->currIndex + 1] == '\0'){
+	if(!tk || inputString[tk->currIndex] == '\0'){//checking if the \0 has been reached.
 		return 0;
 	} 
 	
@@ -379,7 +378,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
 					currentChar++;
 				}
 				if(currentChar==startChar)
-					printf("decimal");
+					printf("decimal");/not workiing
 				else  
 					printf("octal");
 			}
@@ -477,7 +476,7 @@ int main(int argc, char **argv) {
 		
 		/* Get token string, the type has already been printed */
 		char *newToken = TKGetNextToken(tokenizer);
-		printf(" %s\n", newToken);
+		printf(" \"%s\"\n", newToken);// this puts "" around the token when we print it out like in the examples.
 			
 	}
 	
