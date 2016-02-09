@@ -353,7 +353,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	  unless determined otherwise */
 	
 	char *inputString = tk->inputString;
-	char *currentChar = inputString;
+	char *currentChar = &inputString[tk->currIndex];
 	int counter = 0;
 	char *startChar = currentChar;
 	char *newToken = 0;
@@ -413,9 +413,11 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	//creates newToken by having it point to the
 
 	newToken = malloc(sizeof(char) * newTokenSize);
-	memcpy(newToken, startChar, newTokenSize);
+	strncpy(newToken, startChar, newTokenSize - 1);
 	
 	/* adds '\0' to end of array */
+	newToken[newTokenSize] = '\0';
+	
 	return newToken;
 
 	
