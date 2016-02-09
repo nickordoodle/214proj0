@@ -128,23 +128,15 @@ int isDelimiter (char c){
 }
 
 int buildHex(char * currentChar){
-	//char *startChar = currentChar;   This var is unused and commented out for now
+
 	int counter = 0;
-	while(1){
-		if(*currentChar >= 0 || *currentChar <= 9){
+	while(  (*currentChar >= '0' && *currentChar <= '9')  
+				    ||
+		(*currentChar >= 'A' && *currentChar <= 'F')
+		                              ||	 
+                 	(*currentChar >= 'a' && *currentChar <= 'f')   ){
 			currentChar++;
 			counter++;
-			continue;
-		}else if(*currentChar >= 'A' || *currentChar <= 'F'){ //or should it be the other way round?
-			currentChar++;
-			counter++;
-			continue;
-		}else if(*currentChar >= 'a' || *currentChar <= 'f'){
-			currentChar++;
-			counter++;
-			continue;
-		}
-	break;
 	}
 	if(counter == 0)
 		printf("bad token");
