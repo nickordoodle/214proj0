@@ -1,0 +1,629 @@
+commit 3337036f00d9d3f52ce3a2bea6a06aaf0b81d94e
+Author: Nick Scherer <nscherer30@gmail.com>
+Date:   Tue Feb 9 19:12:05 2016 -0500
+
+    did thorough test cases with this version
+
+diff --git a/proj0/testcases.txt b/proj0/testcases.txt
+new file mode 100644
+index 0000000..d08ea03
+--- /dev/null
++++ b/proj0/testcases.txt
+@@ -0,0 +1,145 @@
++Input: ""
++Output:
++	
++Input: "a"
++Output:
++	word "a"
++	
++Input: "1"
++Output:
++	decimal "1"
++	
++Input: "3.5"
++Output:
++	float "3.5"
++	
++Input: "012"
++Output:
++	octal "012"
++	
++Input: "0x376as"
++Output:
++	hexadecimal "0x376a"
++	word "s"
++	
++Input: "123abc"
++Output:
++	decimal "123"
++	word "abc"
++
++Input: "0x123"
++Output:
++	hexadecimal "0x123"
++	
++Input: "30x. 38dq"
++Output:
++	decimal "30"
++	word "x"
++	structure member "."
++	decimal "38"
++	word "dq"
++	
++Input: "(root) ^2 && 4 = six0. += 3"
++Output:
++	left parenthesis "("
++	word "root"
++	right parenthesis ")"
++	bitwise exclusive or "^"
++	decimal "2"
++	logical and "&&"
++	decimal "4"
++	assignment "="
++	word "six0"
++	structure member "."
++	plus equals "+="
++	decimal "3"
++
++Input: "0212"
++Output:
++	octal "0212"
++	
++Input: "2310 [3 ~ >> += 4x ^ 10th POWx0e4r"
++Output:
++	decimal "2310"
++	left bracket "["
++	decimal "3"
++	1's comp "~"
++	shift right ">>"
++	plus equals "+="
++	decimal "4"
++	word "x"
++	bitwise exclusive or "^"
++	decimal "10"
++	word "th"
++	word "POWx0e4r"
++
++Input: "03497djk -- 0239 + || 3"
++Output:
++	octal "034"
++	decimal "97"
++	word "djk"
++	decrement "--"
++	octal "023"
++	decimal "9"
++	plus "+"
++	logical or "||"
++	decimal "3"
++
++	
++Input: "sqrt[30x.3]/ ? is True? : or False % == 0 --"
++Output:
++	word "sqrt"
++	left bracket "["
++	decimal "30"
++	word "x"
++	structure member "."
++	decimal "3"
++	right bracket "]"
++	divide "/"
++	true "?"
++	word "is"
++	word "True"
++	true "?"
++	false ":"
++	word "or"
++	word "False"
++	modulus "%"
++	equals "=="
++	octal "0"
++	decrement "--"
++
++Input: "if elsefor sa 324 0do sa 0 **while"
++Output:
++	keyword "if"
++	word "elsefor"
++	word "sa"
++	decimal "324"
++	octal "0"
++	keyword "do"
++	word "sa"
++	octal "0"
++	multiply "*"
++	multiply "*"
++	keyword "while"
++
++Input: "* * 3. . 43 . 0x32 980 sd -[thevalux% Of]"
++Output:
++	multiply "*"
++	multiply "*"
++	decimal "3"
++	structure member "."
++	structure member "."
++	decimal "43"
++	structure member "."
++	hexadecimal "0x32"
++	decimal "980"
++	word "sd"
++	minus "-"
++	left bracket "["
++	word "thevalux"
++	modulus "%"
++	word "Of"
++	right bracket "]"
++
++	
++
+diff --git a/proj0/testcases.txt~ b/proj0/testcases.txt~
+new file mode 100644
+index 0000000..157502b
+--- /dev/null
++++ b/proj0/testcases.txt~
+@@ -0,0 +1,131 @@
++Input: ""
++Output:
++	
++Input: "a"
++Output:
++	word "a"
++	
++Input: "1"
++Output:
++	decimal "1"
++	
++Input: "3.5"
++Output:
++	float "3.5"
++	
++Input: "012"
++Output:
++	octal "012"
++	
++Input: "0x376as"
++Output:
++	hexadecimal "0x376a"
++	word "s"
++	
++Input: "123abc"
++Output:
++	decimal "123"
++	word "abc"
++
++Input: "0x123"
++Output:
++	hexadecimal "0x123"
++	
++Input: "30x. 38dq"
++Output:
++	decimal "30"
++	word "x"
++	structure member "."
++	decimal "38"
++	word "dq"
++	
++Input: "(root) ^2 && 4 = six0. += 3"
++Output:
++	left parenthesis "("
++	word "root"
++	right parenthesis ")"
++	bitwise exclusive or "^"
++	decimal "2"
++	logical and "&&"
++	decimal "4"
++	assignment "="
++	word "six0"
++	structure member "."
++	plus equals "+="
++	decimal "3"
++
++Input: "0212"
++Output:
++	octal "0212"
++	
++Input: "2310 [3 ~ >> += 4x ^ 10th POWx0e4r"
++Output:
++	decimal "2310"
++	left bracket "["
++	decimal "3"
++	1's comp "~"
++	shift right ">>"
++	plus equals "+="
++	decimal "4"
++	word "x"
++	bitwise exclusive or "^"
++	decimal "10"
++	word "th"
++	word "POWx0e4r"
++
++Input: "03497djk -- 0239 + || 3"
++Output:
++	octal "034"
++	decimal "97"
++	word "djk"
++	decrement "--"
++	octal "023"
++	decimal "9"
++	plus "+"
++	logical or "||"
++	decimal "3"
++
++	
++Input: "sqrt[30x.3]/ ? is True? : or False % == 0 --"
++Output:
++	word "sqrt"
++	left bracket "["
++	decimal "30"
++	word "x"
++	structure member "."
++	decimal "3"
++	right bracket "]"
++	divide "/"
++	true "?"
++	word "is"
++	word "True"
++	true "?"
++	false ":"
++	word "or"
++	word "False"
++	modulus "%"
++	equals "=="
++	octal "0"
++	decrement "--"
++
++Input: "* * 3. . 43 . 0x32 980 sd -[thevalux% Of]"
++Output:
++	multiply "*"
++	multiply "*"
++	decimal "3"
++	structure member "."
++	structure member "."
++	decimal "43"
++	structure member "."
++	hexadecimal "0x32"
++	decimal "980"
++	word "sd"
++	minus "-"
++	left bracket "["
++	word "thevalux"
++	modulus "%"
++	word "Of"
++	right bracket "]"
++
++	
++
+diff --git a/proj0/tokenizer b/proj0/tokenizer
+index f94fe13..7cef553 100755
+Binary files a/proj0/tokenizer and b/proj0/tokenizer differ
+diff --git a/proj0/tokenizer.c b/proj0/tokenizer.c
+index ef83bdf..d33fa4a 100644
+--- a/proj0/tokenizer.c
++++ b/proj0/tokenizer.c
+@@ -99,67 +99,42 @@ void TKDestroy( TokenizerT * tk ) {
+ 		
+ }
+ 
++int buildHex(char * currentChar){	
++	int counter = 0;
++	while(  (*currentChar >= '0' && *currentChar <= '9')  
++				    ||
++		(*currentChar >= 'A' && *currentChar <= 'F')
++		                              ||	 
++                 	(*currentChar >= 'a' && *currentChar <= 'f')   ){
++			currentChar++;
++			counter++;
++	}
++	if(counter == 0)
++		printf("bad token");
++	else
++		printf("hexadecimal");
++	return counter;
++}
++
+ int isDelimiter (char c){
+ 	switch (c){
+ 		case ' ':
+ 			return 1;
+-			break;
+ 		case '\t':
+ 			return 1;
+-			break;
+ 		case '\v':
+ 			return 1;
+-			break;
+ 		case '\f':
+ 			return 1;
+-			break;
+ 		case '\n':
+ 			return 1;
+-			break;
+ 		case '\r':
+ 			return 1;
+-			break;
+ 		default:
+ 			return 0;
+-			break;
+ 	}
+ }
+ 
+-int buildHex(char * currentChar){
+-
+-	int counter = 0;
+-	while(  (*currentChar >= '0' && *currentChar <= '9')  
+-				    ||
+-		(*currentChar >= 'A' && *currentChar <= 'F')
+-		                              ||	 
+-                 	(*currentChar >= 'a' && *currentChar <= 'f')   ){
+-			currentChar++;
+-			counter++;
+-	}
+-	if(counter == 0)
+-		printf("bad token");
+-	else
+-		printf("hexadecimal");
+-	return counter;
+-}
+-
+-int buildOct(char *string){
+-	
+-	return 0;
+-}
+-
+-int buildFloat(char *string){
+-	
+-	return 0;
+-}
+-
+-int buildDecOrFloat(char *currentChar){
+-	/*
+-	while(isdigit(currentChar)){
+-		//currIndex++;	
+-	}*/
+-	return 0;
+-}
+ 
+ /* Executes checks for the C operators located on the reference sheet.  Some extra
+ *  checks are necessary for operators that have more than one character.  Returns 
+@@ -213,8 +188,6 @@ int isOp (char *currentChar){
+ 			}
+ 			printf("1's comp");
+ 			return 1;
+-
+-//Sizeof(cast) is put with opporators 
+ 		case '/':
+ 			printf("divide");
+ 			return 1;
+@@ -269,7 +242,12 @@ int isOp (char *currentChar){
+ 			printf("bitwise or");
+ 			return 1;
+ 		case '=':
+-			printf("equals");
++			if( *(currentChar + 1) == '='){
++				currentChar++;
++				printf("equals");
++				return 2;
++			}
++			printf("assignment");
+ 			return 1;
+ 		case '(':
+ 			printf("left parenthesis");
+@@ -283,6 +261,13 @@ int isOp (char *currentChar){
+ 		case ']':
+ 			printf("right bracket");
+ 			return 1;
++		case '{':
++			printf("left brace");
++			return 1;
++		case '}':
++			printf("right brace");
++			return 1;	
++		
+ 		case '.':
+ 			printf("structure member");
+ 			return 1;
+@@ -300,8 +285,18 @@ int isOp (char *currentChar){
+ 	return 0;
+ }
+ 
+-/* Helper function for main to see if we have iterated through entire input or not */
++int isKeyWord(char *token){
+ 
++	if(!strcmp(token, "if") ||  !strcmp(token, "while") || !strcmp(token, "for") ||
++	 !strcmp(token, "else") || !strcmp(token, "do") || !strcmp(token, "return") ||
++	 !strcmp(token, "switch")  ||  !strcmp(token, "typedef")  ||  !strcmp(token, "struct") ){
++		return 1;
++	}
++	
++	return 0;
++}
++
++/* Helper function for main to see if we have iterated through entire input or not */
+ int hasNextToken(TokenizerT *tk){
+ 	
+ 	if(!tk || tk->inputString[tk->currIndex] == '\0'){
+@@ -362,7 +357,6 @@ char *TKGetNextToken( TokenizerT * tk ) {
+ 		while(isalpha(*currentChar) || isdigit(*currentChar)){
+ 			currentChar++;
+ 		}
+-		printf("word");
+ 	
+ 	} 
+ 	/* Check for Hex, Octal, Floats, and Decimals */
+@@ -421,6 +415,11 @@ char *TKGetNextToken( TokenizerT * tk ) {
+ 	/* Copy substring of the input to get new token value */
+ 	strncpy(newToken, startChar, newTokenSize - 1);
+ 	
++	if(isKeyWord(newToken)){
++		printf("keyword");
++	} else if(isalpha(*newToken)){
++		printf("word");
++	}
+ 	/* Add '\0' to end of array for delimiter */
+ 	newToken[newTokenSize] = '\0';
+ 	
+diff --git a/proj0/tokenizer.c~ b/proj0/tokenizer.c~
+index 9043a9a..5bbe5ef 100644
+--- a/proj0/tokenizer.c~
++++ b/proj0/tokenizer.c~
+@@ -99,67 +99,42 @@ void TKDestroy( TokenizerT * tk ) {
+ 		
+ }
+ 
++int buildHex(char * currentChar){	
++	int counter = 0;
++	while(  (*currentChar >= '0' && *currentChar <= '9')  
++				    ||
++		(*currentChar >= 'A' && *currentChar <= 'F')
++		                              ||	 
++                 	(*currentChar >= 'a' && *currentChar <= 'f')   ){
++			currentChar++;
++			counter++;
++	}
++	if(counter == 0)
++		printf("bad token");
++	else
++		printf("hexadecimal");
++	return counter;
++}
++
+ int isDelimiter (char c){
+ 	switch (c){
+ 		case ' ':
+ 			return 1;
+-			break;
+ 		case '\t':
+ 			return 1;
+-			break;
+ 		case '\v':
+ 			return 1;
+-			break;
+ 		case '\f':
+ 			return 1;
+-			break;
+ 		case '\n':
+ 			return 1;
+-			break;
+ 		case '\r':
+ 			return 1;
+-			break;
+ 		default:
+ 			return 0;
+-			break;
+ 	}
+ }
+ 
+-int buildHex(char * currentChar){
+-
+-	int counter = 0;
+-	while(  (*currentChar >= '0' && *currentChar <= '9')  
+-				    ||
+-		(*currentChar >= 'A' && *currentChar <= 'F')
+-		                              ||	 
+-                 	(*currentChar >= 'a' && *currentChar <= 'f')   ){
+-			currentChar++;
+-			counter++;
+-	}
+-	if(counter == 0)
+-		printf("bad token");
+-	else
+-		printf("hexadecimal");
+-	return counter;
+-}
+-
+-int buildOct(char *string){
+-	
+-	return 0;
+-}
+-
+-int buildFloat(char *string){
+-	
+-	return 0;
+-}
+-
+-int buildDecOrFloat(char *currentChar){
+-	/*
+-	while(isdigit(currentChar)){
+-		//currIndex++;	
+-	}*/
+-	return 0;
+-}
+ 
+ /* Executes checks for the C operators located on the reference sheet.  Some extra
+ *  checks are necessary for operators that have more than one character.  Returns 
+@@ -269,7 +244,12 @@ int isOp (char *currentChar){
+ 			printf("bitwise or");
+ 			return 1;
+ 		case '=':
+-			printf("equals");
++			if( *(currentChar + 1) == '='){
++				currentChar++;
++				printf("equals");
++				return 2;
++			}
++			printf("assignment");
+ 			return 1;
+ 		case '(':
+ 			printf("left parenthesis");
+@@ -283,6 +263,13 @@ int isOp (char *currentChar){
+ 		case ']':
+ 			printf("right bracket");
+ 			return 1;
++		case '{':
++			printf("left brace");
++			return 1;
++		case '}':
++			printf("right brace");
++			return 1;	
++		
+ 		case '.':
+ 			printf("structure member");
+ 			return 1;
+@@ -300,8 +287,18 @@ int isOp (char *currentChar){
+ 	return 0;
+ }
+ 
+-/* Helper function for main to see if we have iterated through entire input or not */
++int isKeyWord(char *token){
++
++	if(!strcmp(token, "if") ||  !strcmp(token, "while") || !strcmp(token, "for") ||
++	 !strcmp(token, "else") || !strcmp(token, "do") || !strcmp(token, "return") ||
++	 !strcmp(token, "switch")  ||  !strcmp(token, "typedef")  ||  !strcmp(token, "struct") ){
++		return 1;
++	}
++	
++	return 0;
++}
+ 
++/* Helper function for main to see if we have iterated through entire input or not */
+ int hasNextToken(TokenizerT *tk){
+ 	
+ 	if(!tk || tk->inputString[tk->currIndex] == '\0'){
+@@ -362,7 +359,6 @@ char *TKGetNextToken( TokenizerT * tk ) {
+ 		while(isalpha(*currentChar) || isdigit(*currentChar)){
+ 			currentChar++;
+ 		}
+-		printf("word");
+ 	
+ 	} 
+ 	/* Check for Hex, Octal, Floats, and Decimals */
+@@ -381,7 +377,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
+ 					currentChar++;
+ 				}
+ 				if(currentChar==startChar)
+-					printf("decimal");/not workiing
++					printf("decimal");
+ 				else  
+ 					printf("octal");
+ 			}
+@@ -421,6 +417,11 @@ char *TKGetNextToken( TokenizerT * tk ) {
+ 	/* Copy substring of the input to get new token value */
+ 	strncpy(newToken, startChar, newTokenSize - 1);
+ 	
++	if(isKeyWord(newToken)){
++		printf("keyword");
++	} else if(isalpha(*newToken)){
++		printf("word");
++	}
+ 	/* Add '\0' to end of array for delimiter */
+ 	newToken[newTokenSize] = '\0';
+ 	

@@ -10,6 +10,13 @@
 #include <string.h>
 #include <ctype.h>
 
+/*To Do:
+Do we need to deal with there being no char after a 0?
+Need to add checks that malloc worked properly. In class he said we needed to do that.
+Bad tokens must be printed out in hexform
+*/
+
+
 /*
  * Tokenizer type.  You need to fill in the type as part of your implementation.
  * Input String will contain the whole input. CurrentIndex is what position the program
@@ -92,22 +99,74 @@ void TKDestroy( TokenizerT * tk ) {
 		
 }
 
-int isDelimiter (char *c){
+<<<<<<< HEAD
+int isDelimiter(char * c){
+        if(*c == ' '){
+                return 1;
+        }else if(*c == '\'){
+                if(*(c+1)== 't'
+                        ||*(c+1)== 'v'
+                        ||*(c+1)== 'f'
+                        ||*(c+1)== 'n'
+                        ||*(c+1)== 'r'){
+                        return 2;
+                }
+        }
+        return 0;
+}
+
+int buildHex(char * currentChar){	
+
+	int counter = 0;
+	while(  (*currentChar >= '0' && *currentChar <= '9')  
+				    ||
+		(*currentChar >= 'A' && *currentChar <= 'F')
+		                              ||	 
+                 	(*currentChar >= 'a' && *currentChar <= 'f')   ){
+			currentChar++;
+			counter++;
+	}
+	if(counter == 0)
+		printf("bad token");
+	else
+		printf("hexadecimal");
+	return counter;
+}
+
+int buildOct(char *string){
+	
+	return 0;
+}
+
+int buildFloat(char *string){
+	
+	return 0;
+}
+
+=======
+int isDelimiter (char c){
 	switch (c){
 		case ' ':
 			return 1;
+			break;
 		case '\t':
 			return 1;
+			break;
 		case '\v':
 			return 1;
+			break;
 		case '\f':
 			return 1;
+			break;
 		case '\n':
 			return 1;
+			break;
 		case '\r':
 			return 1;
+			break;
 		default:
 			return 0;
+			break;
 	}
 }
 
@@ -129,6 +188,24 @@ int buildHex(char * currentChar){
 	return counter;
 }
 
+int buildOct(char *string){
+	
+	return 0;
+}
+
+int buildFloat(char *string){
+	
+	return 0;
+}
+
+>>>>>>> parent of 3337036... did thorough test cases with this version
+int buildDecOrFloat(char *currentChar){
+	/*
+	while(isdigit(currentChar)){
+		//currIndex++;	
+	}*/
+	return 0;
+}
 
 /* Executes checks for the C operators located on the reference sheet.  Some extra
 *  checks are necessary for operators that have more than one character.  Returns 
@@ -238,12 +315,7 @@ int isOp (char *currentChar){
 			printf("bitwise or");
 			return 1;
 		case '=':
-			if( *(currentChar + 1) == '='){
-				currentChar++;
-				printf("equals");
-				return 2;
-			}
-			printf("assignment");
+			printf("equals");
 			return 1;
 		case '(':
 			printf("left parenthesis");
@@ -256,12 +328,6 @@ int isOp (char *currentChar){
 			return 1;
 		case ']':
 			printf("right bracket");
-			return 1;
-		case '{':
-			printf("left brace");
-			return 1;
-		case '}':
-			printf("right brace");
 			return 1;
 		case '.':
 			printf("structure member");
@@ -331,10 +397,16 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	int newTokenSize = 0;
 
 	/* Ignore and skip any delimiters, they are not tokens */
-	while(isDelimiter(*currentChar)){	
-		currentChar++;
-		startChar++;
-	}
+	counter = isDelimiter(currentChar);
+        printf("counter: %d\n", counter);
+        while(counter != 0 ){
+                printf("entered loop");
+                currentChar+=counter;
+                startChar+=counter;
+                counter = 0;
+                counter = isDelimiter(currentChar);
+        }
+
 	
 	/* Check for word */
 	if(isalpha(*currentChar)){

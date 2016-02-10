@@ -10,13 +10,6 @@
 #include <string.h>
 #include <ctype.h>
 
-/*To Do:
-Do we need to deal with there being no char after a 0?
-Need to add checks that malloc worked properly. In class he said we needed to do that.
-Bad tokens must be printed out in hexform
-*/
-
-
 /*
  * Tokenizer type.  You need to fill in the type as part of your implementation.
  * Input String will contain the whole input. CurrentIndex is what position the program
@@ -103,25 +96,18 @@ int isDelimiter (char c){
 	switch (c){
 		case ' ':
 			return 1;
-			break;
 		case '\t':
 			return 1;
-			break;
 		case '\v':
 			return 1;
-			break;
 		case '\f':
 			return 1;
-			break;
 		case '\n':
 			return 1;
-			break;
 		case '\r':
 			return 1;
-			break;
 		default:
 			return 0;
-			break;
 	}
 }
 
@@ -143,23 +129,6 @@ int buildHex(char * currentChar){
 	return counter;
 }
 
-int buildOct(char *string){
-	
-	return 0;
-}
-
-int buildFloat(char *string){
-	
-	return 0;
-}
-
-int buildDecOrFloat(char *currentChar){
-	/*
-	while(isdigit(currentChar)){
-		//currIndex++;	
-	}*/
-	return 0;
-}
 
 /* Executes checks for the C operators located on the reference sheet.  Some extra
 *  checks are necessary for operators that have more than one character.  Returns 
@@ -269,7 +238,12 @@ int isOp (char *currentChar){
 			printf("bitwise or");
 			return 1;
 		case '=':
-			printf("equals");
+			if( *(currentChar + 1) == '='){
+				currentChar++;
+				printf("equals");
+				return 2;
+			}
+			printf("assignment");
 			return 1;
 		case '(':
 			printf("left parenthesis");
@@ -282,6 +256,12 @@ int isOp (char *currentChar){
 			return 1;
 		case ']':
 			printf("right bracket");
+			return 1;
+		case '{':
+			printf("left brace");
+			return 1;
+		case '}':
+			printf("right brace");
 			return 1;
 		case '.':
 			printf("structure member");
