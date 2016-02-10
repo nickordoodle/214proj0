@@ -370,7 +370,11 @@ char *TKGetNextToken( TokenizerT * tk ) {
                 if(counter > 0){
                         currentChar+=counter;
                         startChar+=counter;
+                }else if(counter == 0){
+                        printf("divide");
+                        currentChar++;
                 }
+
         }
 
 	/* Check for word */
