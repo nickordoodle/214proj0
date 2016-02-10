@@ -1,0 +1,161 @@
+Input: ""
+Output:
+	
+Input: "a"
+Output:
+	word "a"
+	
+Input: "1"
+Output:
+	decimal "1"
+	
+Input: "3.5"
+Output:
+	float "3.5"
+	
+Input: "012"
+Output:
+	octal "012"
+	
+Input: "0x376as"
+Output:
+	hexadecimal "0x376a"
+	word "s"
+	
+Input: "123abc"
+Output:
+	decimal "123"
+	word "abc"
+
+Input: "0x123"
+Output:
+	hexadecimal "0x123"
+	
+Input: "30x. 38dq"
+Output:
+	decimal "30"
+	word "x"
+	structure member "."
+	decimal "38"
+	word "dq"
+	
+Input: "39ck  -+if >> else TRUE *^&& while do"
+Output:
+	decimal "30"
+	word "x"
+	structure member "."
+	decimal "38"
+	word "dq"
+	
+Input: "30x. 38dq"
+Output:
+	decimal "30"
+	word "x"
+	structure member "."
+	decimal "38"
+	word "dq"
+	
+Input: "(root) ^2 && 4 = six0. += 3"
+Output:
+	left parenthesis "("
+	word "root"
+	right parenthesis ")"
+	bitwise exclusive or "^"
+	decimal "2"
+	logical and "&&"
+	decimal "4"
+	assignment "="
+	word "six0"
+	structure member "."
+	plus equals "+="
+	decimal "3"
+
+Input: "0212"
+Output:
+	octal "0212"
+	
+Input: "2310 [3 ~ >> += 4x ^ 10th POWx0e4r"
+Output:
+	decimal "2310"
+	left bracket "["
+	decimal "3"
+	1's comp "~"
+	shift right ">>"
+	plus equals "+="
+	decimal "4"
+	word "x"
+	bitwise exclusive or "^"
+	decimal "10"
+	word "th"
+	word "POWx0e4r"
+
+Input: "03497djk -- 0239 + || 3"
+Output:
+	octal "034"
+	decimal "97"
+	word "djk"
+	decrement "--"
+	octal "023"
+	decimal "9"
+	plus "+"
+	logical or "||"
+	decimal "3"
+
+	
+Input: "sqrt[30x.3]/ ? is True? : or False % == 0 --"
+Output:
+	word "sqrt"
+	left bracket "["
+	decimal "30"
+	word "x"
+	structure member "."
+	decimal "3"
+	right bracket "]"
+	divide "/"
+	true "?"
+	word "is"
+	word "True"
+	true "?"
+	false ":"
+	word "or"
+	word "False"
+	modulus "%"
+	equals "=="
+	octal "0"
+	decrement "--"
+
+Input: "if elsefor sa 324 0do sa 0 **while"
+Output:
+	keyword "if"
+	word "elsefor"
+	word "sa"
+	decimal "324"
+	octal "0"
+	keyword "do"
+	word "sa"
+	octal "0"
+	multiply "*"
+	multiply "*"
+	keyword "while"
+
+Input: "* * 3. . 43 . 0x32 980 sd -[thevalux% Of]"
+Output:
+	multiply "*"
+	multiply "*"
+	decimal "3"
+	structure member "."
+	structure member "."
+	decimal "43"
+	structure member "."
+	hexadecimal "0x32"
+	decimal "980"
+	word "sd"
+	minus "-"
+	left bracket "["
+	word "thevalux"
+	modulus "%"
+	word "Of"
+	right bracket "]"
+
+	
+

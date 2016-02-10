@@ -255,7 +255,12 @@ int isOp (char *currentChar){
 			printf("bitwise or");
 			return 1;
 		case '=':
-			printf("equals");
+			if( *(currentChar + 1) == '='){
+				currentChar++;
+				printf("equals");
+				return 2;
+			}
+			printf("assignment");
 			return 1;
 		case '(':
 			printf("left parenthesis");
