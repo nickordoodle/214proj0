@@ -287,6 +287,30 @@ int isOp (char *currentChar){
 	return 0;
 }
 
+int isComment(char * currentChar){
+        currentChar++;
+        int count = 1;
+        if(*currentChar == '\0')
+                return 0;
+        if(*currentChar == '/')
+                return -1;
+        else if(*currentChar == '*'){
+                while(*currentChar != '\0'){
+                        currentChar++;
+                        count++;
+                        if(*currentChar == '*'){
+                                currentChar++;
+                                count++;
+                                if(*currentChar == '/'){
+                                        count++;
+                                        return count;
+                                }
+                        }
+                }
+        }
+        return 0;
+
+}
 /* Helper function for main to see if we have iterated through entire input or not */
 
 int hasNextToken(TokenizerT *tk){
@@ -346,9 +370,21 @@ char *TKGetNextToken( TokenizerT * tk ) {
 		counter = isDelimiter(currentChar);
              }
 
-	
+	counter = 0;
+        if(*currentChar == '/'){
+                counter = isComment(currentChar);
+                if(counter == -1){
+                        currentChar += strlen(currentChar);
+                        startChar = currentChar;
+                }
+                if(counter > 0){
+                        currentChar+=counter;
+                        startChar+=counter;
+                }
+        }
+
 	/* Check for word */
-	if(isalpha(*currentChar)){
+	else if(isalpha(*currentChar)){
 		/* Build word */
 		while(isalpha(*currentChar) || isdigit(*currentChar)){
 			currentChar++;
@@ -369,7 +405,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
 				while( (*currentChar >= '0' && *currentChar <= '7') && (*currentChar != '\0') ){
 					currentChar++;
 				}
-				if(currentChar==startChar)
+				if(currentChar==startChar + 1)
 					printf("decimal");
 				else  
 					printf("octal");
