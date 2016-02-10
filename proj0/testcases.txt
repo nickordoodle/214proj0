@@ -41,19 +41,28 @@ Output:
 	
 Input: "39ck  -+if >> else TRUE *^&& while do"
 Output:
-	decimal "30"
-	word "x"
-	structure member "."
-	decimal "38"
-	word "dq"
-	
-Input: "30x. 38dq"
+	decimal "39"
+	word "ck"
+	minus "-"
+	plus "+"
+	keyword "if"
+	shift right ">>"
+	keyword "else"
+	word "TRUE"
+	multiply "*"
+	bitwise exclusive or "^"
+	logical and "&&"
+	keyword "while"
+	keyword "do"
+
+Input: "df //sadas fd320 --"
 Output:
-	decimal "30"
-	word "x"
-	structure member "."
-	decimal "38"
-	word "dq"
+	word "df"
+	
+Input: "sad /* fdfs */dsf"
+Output:
+	word "sad"
+	word "dsf"
 	
 Input: "(root) ^2 && 4 = six0. += 3"
 Output:
