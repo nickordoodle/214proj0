@@ -102,7 +102,7 @@ void TKDestroy( TokenizerT * tk ) {
 int isDelimiter(char * c){
         if(*c == ' '){
                 return 1;
-        }else if(*c == '\'){
+        }else if(*c == '\\'){
                 if(*(c+1)== 't'
                         ||*(c+1)== 'v'
                         ||*(c+1)== 'f'
