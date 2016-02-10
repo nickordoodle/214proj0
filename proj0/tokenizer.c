@@ -185,7 +185,6 @@ int isOp (char *currentChar){
 			printf("1's comp");
 			return 1;
 
-//Sizeof(cast) is put with opporators 
 		case '/':
 			printf("divide");
 			return 1;
@@ -361,7 +360,8 @@ char *TKGetNextToken( TokenizerT * tk ) {
              }
 
 	counter = 0;
-        if(*currentChar == '/'){
+	if(*currentChar == '\0');
+        else if(*currentChar == '/'){
                 counter = isComment(currentChar);
                 if(counter == -1){
                         currentChar += strlen(currentChar);
@@ -468,7 +468,8 @@ int main(int argc, char **argv) {
 		
 		/* Get token string, the type has already been printed */
 		char *newToken = TKGetNextToken(tokenizer);
-		printf(" \"%s\"\n", newToken);// this puts "" around the token when we print it out like in the examples.
+		if(strlen(newToken) > 0)
+			printf(" \"%s\"\n", newToken);
 		free(newToken);
 			
 	}
