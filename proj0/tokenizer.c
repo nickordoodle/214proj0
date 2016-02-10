@@ -99,6 +99,16 @@ void TKDestroy( TokenizerT * tk ) {
 		
 }
 
+int isKeyWord(char *string){
+
+	if(!strcmp(string, "if") || !strcmp(string, "else") || !strcmp(string, "do") 
+	|| !strcmp(string, "while") || !strcmp(string, "return") || !strcmp(string, "switch") 
+	|| !strcmp(string, "case") || !strcmp(string, "default") || !strcmp(string, "break") ){
+	
+		return 1;
+	}
+	return 0;
+}
 int isDelimiter(char * c){
         if(*c == ' '){
                 return 1;
@@ -343,8 +353,6 @@ char *TKGetNextToken( TokenizerT * tk ) {
 		while(isalpha(*currentChar) || isdigit(*currentChar)){
 			currentChar++;
 		}
-		printf("word");
-	
 	} 
 	/* Check for Hex, Octal, Floats, and Decimals */
 	else if( isdigit(*currentChar)){
@@ -402,6 +410,11 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	/* Copy substring of the input to get new token value */
 	strncpy(newToken, startChar, newTokenSize - 1);
 	
+	if(isKeyWord(newToken)){
+		printf("keyword");
+	} else if(isalpha(*newToken)){
+		printf("word");
+	}
 	/* Add '\0' to end of array for delimiter */
 	newToken[newTokenSize] = '\0';
 	
