@@ -99,6 +99,7 @@ void TKDestroy( TokenizerT * tk ) {
 		
 }
 
+/* After a word token is created, check to see if it matches a common keyword */
 int isKeyWord(char *string){
 
 	if(!strcmp(string, "if") || !strcmp(string, "else") || !strcmp(string, "do") 
@@ -109,6 +110,9 @@ int isKeyWord(char *string){
 	}
 	return 0;
 }
+
+/* Check to see if current char is a delimiter and if so, skip it until end of input or 
+    new token is found */
 int isDelimiter(char * c){
         if(*c == ' '){
                 return 1;
@@ -124,6 +128,8 @@ int isDelimiter(char * c){
         return 0;
 }
 
+/* Function to increment currentchar in order to build it until the input no longer
+    fits the hexidecimal token type */
 int buildHex(char * currentChar){	
 
 	int counter = 0;
@@ -287,6 +293,7 @@ int isOp (char *currentChar){
 	return 0;
 }
 
+/* Check to see if comments exist, if so, ignore input following the comments */
 int isComment(char * currentChar){
         currentChar++;
         int count = 1;
