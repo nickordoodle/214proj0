@@ -10,6 +10,13 @@
 #include <string.h>
 #include <ctype.h>
 
+/*To Do:
+Do we need to deal with there being no char after a 0?
+Need to add checks that malloc worked properly. In class he said we needed to do that.
+Bad tokens must be printed out in hexform
+*/
+
+
 /*
  * Tokenizer type.  You need to fill in the type as part of your implementation.
  * Input String will contain the whole input. CurrentIndex is what position the program
@@ -92,26 +99,22 @@ void TKDestroy( TokenizerT * tk ) {
 		
 }
 
-int isDelimiter (char c){
-	switch (c){
-		case ' ':
-			return 1;
-		case '\t':
-			return 1;
-		case '\v':
-			return 1;
-		case '\f':
-			return 1;
-		case '\n':
-			return 1;
-		case '\r':
-			return 1;
-		default:
-			return 0;
-	}
+int isDelimiter(char * c){
+        if(*c == ' '){
+                return 1;
+        }else if(*c == '\\'){
+                if(*(c+1)== 't'
+                        ||*(c+1)== 'v'
+                        ||*(c+1)== 'f'
+                        ||*(c+1)== 'n'
+                        ||*(c+1)== 'r'){
+                        return 2;
+                }
+        }
+        return 0;
 }
 
-int buildHex(char * currentChar){
+int buildHex(char * currentChar){	
 
 	int counter = 0;
 	while(  (*currentChar >= '0' && *currentChar <= '9')  
@@ -128,7 +131,6 @@ int buildHex(char * currentChar){
 		printf("hexadecimal");
 	return counter;
 }
-
 
 /* Executes checks for the C operators located on the reference sheet.  Some extra
 *  checks are necessary for operators that have more than one character.  Returns 
@@ -238,12 +240,7 @@ int isOp (char *currentChar){
 			printf("bitwise or");
 			return 1;
 		case '=':
-			if( *(currentChar + 1) == '='){
-				currentChar++;
-				printf("equals");
-				return 2;
-			}
-			printf("assignment");
+			printf("equals");
 			return 1;
 		case '(':
 			printf("left parenthesis");
@@ -331,10 +328,14 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	int newTokenSize = 0;
 
 	/* Ignore and skip any delimiters, they are not tokens */
-	while(isDelimiter(*currentChar)){	
-		currentChar++;
-		startChar++;
-	}
+	counter = isDelimiter(currentChar);
+        	while(counter != 0 ){
+		currentChar+=counter;
+		startChar+=counter;
+		counter = 0;
+		counter = isDelimiter(currentChar);
+             }
+
 	
 	/* Check for word */
 	if(isalpha(*currentChar)){
