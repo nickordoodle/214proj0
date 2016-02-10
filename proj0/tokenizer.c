@@ -397,7 +397,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
 				while( (*currentChar >= '0' && *currentChar <= '7') && (*currentChar != '\0') ){
 					currentChar++;
 				}
-				if(currentChar==startChar)
+				if(currentChar==startChar + 1)
 					printf("decimal");
 				else  
 					printf("octal");
